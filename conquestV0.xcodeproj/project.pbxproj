@@ -15,6 +15,10 @@
 		BDB8A4B51D33FD36003D72B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4B31D33FD36003D72B2 /* LaunchScreen.storyboard */; };
 		BDB8A4BE1D33FD7A003D72B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4BD1D33FD7A003D72B2 /* User.swift */; };
 		BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */; };
+		BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4C11D3569A6003D72B2 /* Pin.swift */; };
+		BDB8A4CE1D35B376003D72B2 /* CustomCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */; };
+		BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */; };
+		BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		BDB8A4B61D33FD36003D72B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB8A4BD1D33FD7A003D72B2 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationSearchTable.swift; sourceTree = "<group>"; };
+		BDB8A4C11D3569A6003D72B2 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCalloutView.xib; sourceTree = "<group>"; };
+		BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutView.swift; sourceTree = "<group>"; };
+		BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildPinViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,11 +69,14 @@
 			isa = PBXGroup;
 			children = (
 				BDB8A4A81D33FD36003D72B2 /* AppDelegate.swift */,
+				BDB8A4D31D36C2EF003D72B2 /* ViewControllers */,
 				BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */,
 				BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */,
 				BDB8A4AC1D33FD36003D72B2 /* SecondViewController.swift */,
+				BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */,
 				BDB8A4BC1D33FD41003D72B2 /* Objects */,
 				BDB8A4AE1D33FD36003D72B2 /* Main.storyboard */,
+				BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */,
 				BDB8A4B11D33FD36003D72B2 /* Assets.xcassets */,
 				BDB8A4B31D33FD36003D72B2 /* LaunchScreen.storyboard */,
 				BDB8A4B61D33FD36003D72B2 /* Info.plist */,
@@ -77,8 +88,17 @@
 			isa = PBXGroup;
 			children = (
 				BDB8A4BD1D33FD7A003D72B2 /* User.swift */,
+				BDB8A4C11D3569A6003D72B2 /* Pin.swift */,
+				BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */,
 			);
 			name = Objects;
+			sourceTree = "<group>";
+		};
+		BDB8A4D31D36C2EF003D72B2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +161,7 @@
 			files = (
 				BDB8A4B51D33FD36003D72B2 /* LaunchScreen.storyboard in Resources */,
 				BDB8A4B21D33FD36003D72B2 /* Assets.xcassets in Resources */,
+				BDB8A4CE1D35B376003D72B2 /* CustomCalloutView.xib in Resources */,
 				BDB8A4B01D33FD36003D72B2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,6 +176,9 @@
 				BDB8A4BE1D33FD7A003D72B2 /* User.swift in Sources */,
 				BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */,
 				BDB8A4AD1D33FD36003D72B2 /* SecondViewController.swift in Sources */,
+				BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */,
+				BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */,
+				BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */,
 				BDB8A4A91D33FD36003D72B2 /* AppDelegate.swift in Sources */,
 				BDB8A4AB1D33FD36003D72B2 /* MapViewController.swift in Sources */,
 			);

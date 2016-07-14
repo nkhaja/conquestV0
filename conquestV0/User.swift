@@ -12,7 +12,7 @@ class User: NSObject {
     let name:String
     let password: String
     let email: String
-    let pins = []
+    var pins:[String: Pin] = [:]
     // Set of Mission
     
     
@@ -20,6 +20,10 @@ class User: NSObject {
         self.name = name
         self.password = password
         self.email = email
+    }
+    
+    func addPin(pin:Pin){
+        pins[pin.key] = pin
     }
     
     

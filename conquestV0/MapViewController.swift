@@ -6,7 +6,8 @@
 //  Copyright © 2016 Nabil. All rights reserved.
 //
 
-// http://www.thorntech.com/2016/01/how-to-search-for-location-using-apples-mapkit/
+
+
 
 import UIKit
 import MapKit
@@ -20,8 +21,26 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     var selectedPin:MKPlacemark? = nil
-    let locationManager = CLLocationManager()
+    var locationManager = CLLocationManager()
     var resultSearchController:UISearchController? = nil
+    var currentUser: User = User(name: "test",password: "test",email: "test")
+    var keyForSearchAnnotation: String?
+    
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "buildPin" {
+            if let buildPinViewController = segue.destinationViewController as? BuildPinViewController {
+                buildPinViewController.selectedPin = selectedPin
+                buildPinViewController.currentUser = currentUser
+        }
+    }
+}
+ 
+    func customizePin(){
+        performSegueWithIdentifier("buildPin", sender: self)
+    }
+    
     
     
     func getDirections(){
@@ -31,6 +50,45 @@ class MapViewController: UIViewController {
             mapItem.openInMapsWithLaunchOptions(launchOptions)
         }
     }
+    
+    
+    
+    
+    
+    func populatePins(){
+        let pins = currentUser.pins
+        for (_,value) in pins {
+            let newPin = MKPointAnnotation()
+            newPin.coordinate = value.location
+            mapView.addAnnotation(newPin)
+        }
+    }
+    
+    func buildKey (annotation: CLLocationCoordinate2D) -> String {
+        return String(annotation.latitude) + String(annotation.longitude)
+    }
+    
+    
+
+    
+    
+    func scaleUIImageToSize(let image: UIImage, let size: CGSize) -> UIImage {
+        let hasAlpha = false
+        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        image.drawInRect(CGRect(origin: CGPointZero, size: size))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+    
+    @IBAction func pinSetterUnwind(sender: UIStoryboardSegue){
+    }
+    
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,8 +116,13 @@ class MapViewController: UIViewController {
         
         locationSearchTable.mapView = mapView
         locationSearchTable.handleMapSearchDelegate = self
+        
+        mapView.delegate = self
     }
 }
+
+
+
 
 extension MapViewController : CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -87,7 +150,7 @@ extension MapViewController: HandleMapSearch {
         // cache the pin
         selectedPin = placemark
         // clear existing pins
-        mapView.removeAnnotations(mapView.annotations)
+        //mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
         annotation.title = placemark.name
@@ -101,6 +164,10 @@ extension MapViewController: HandleMapSearch {
         mapView.setRegion(region, animated: true)
     }
 }
+
+
+
+
 
 extension MapViewController : MKMapViewDelegate {
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
@@ -116,8 +183,54 @@ extension MapViewController : MKMapViewDelegate {
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPointZero, size: smallSquare))
         button.setBackgroundImage(UIImage(named: "car"), forState: .Normal)
-        button.addTarget(self, action: "getDirections", forControlEvents: .TouchUpInside)
+        
+        
+        
+        //button.addTarget(self, action: "getDirections", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: "customizePin", forControlEvents: .TouchUpInside)
         pinView?.leftCalloutAccessoryView = button
         return pinView
     }
+    
+    
+    
+    
+    
+    func mapView(mapView: MKMapView,
+                 didSelectAnnotationView view: MKAnnotationView)
+    {
+       
+         if view.annotation is MKUserLocation || currentUser.pins[buildKey((view.annotation?.coordinate)!)] == nil
+        {
+            // Don't proceed with custom callout
+            return
+        }
+   
+        let views = NSBundle.mainBundle().loadNibNamed("CustomCalloutView", owner: nil, options: nil)
+        let calloutView = views[0] as! CustomCalloutView
+        calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
+        
+      
+        
+        view.addSubview(calloutView)
+    }
+
+
+
+    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
+       print("Nikolas is cool")
+        if view.isKindOfClass(CustomCalloutView)
+        {
+            view.removeFromSuperview()
+            
+            for subview in view.subviews
+            {
+                subview.removeFromSuperview()
+            }
+        }
+    }
+
 }
+
+
+
