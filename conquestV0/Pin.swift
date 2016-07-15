@@ -13,9 +13,11 @@ class Pin: NSObject {
     var date: NSDate?
     var user: User
     var location: CLLocationCoordinate2D
+    var placeName: String?
     var details: String?
     var title: String?
     var key: String
+
 
     
     init(user:User, location: CLLocationCoordinate2D){

@@ -15,7 +15,7 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="testPic" translatesAutoresizingMaskIntoConstraints="NO" id="lOM-ej-CDx">
                     <rect key="frame" x="0.0" y="0.0" width="165" height="165"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE4-aD-ha0" customClass="CustomCalloutView">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE4-aD-ha0">
                     <rect key="frame" x="173" y="8" width="119" height="51"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="119" id="9Am-Pq-2ID"/>
@@ -42,10 +42,6 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tQA-2P-P4p">
-                    <rect key="frame" x="0.0" y="0.0" width="165" height="165"/>
-                    <state key="normal" backgroundImage="testPic"/>
-                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o96-dc-CY3">
                     <rect key="frame" x="223" y="122" width="119" height="35"/>
                     <constraints>
@@ -55,22 +51,25 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zOu-Pq-Pet">
+                    <rect key="frame" x="167" y="47" width="46" height="30"/>
+                    <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="testButton:" destination="-1" eventType="touchUpInside" id="3F7-7b-Isp"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <accessibility key="accessibilityConfiguration" identifier="CustomCalloutView">
                 <bool key="isElement" value="YES"/>
             </accessibility>
             <constraints>
-                <constraint firstItem="tQA-2P-P4p" firstAttribute="bottom" secondItem="lOM-ej-CDx" secondAttribute="bottom" id="2nh-AK-JVQ"/>
                 <constraint firstAttribute="bottom" secondItem="lOM-ej-CDx" secondAttribute="bottom" id="5qm-Lz-cqY"/>
                 <constraint firstItem="Bzz-7M-wX5" firstAttribute="leading" secondItem="mbt-Qq-brx" secondAttribute="leading" id="6vR-qU-B6C"/>
                 <constraint firstItem="fE4-aD-ha0" firstAttribute="leading" secondItem="lOM-ej-CDx" secondAttribute="trailing" constant="8" symbolic="YES" id="BSe-nm-Pwr"/>
                 <constraint firstItem="lOM-ej-CDx" firstAttribute="leading" secondItem="GrD-A7-8h4" secondAttribute="leading" id="Bnq-ef-plW"/>
                 <constraint firstItem="fE4-aD-ha0" firstAttribute="top" secondItem="GrD-A7-8h4" secondAttribute="topMargin" id="CNY-oG-MMM"/>
-                <constraint firstItem="tQA-2P-P4p" firstAttribute="top" secondItem="lOM-ej-CDx" secondAttribute="top" id="CVM-lM-gy1"/>
-                <constraint firstItem="tQA-2P-P4p" firstAttribute="leading" secondItem="lOM-ej-CDx" secondAttribute="leading" id="O9f-0B-HYY"/>
                 <constraint firstItem="mbt-Qq-brx" firstAttribute="top" secondItem="fE4-aD-ha0" secondAttribute="bottom" constant="13" id="QAL-ha-tPe"/>
-                <constraint firstItem="fE4-aD-ha0" firstAttribute="leading" secondItem="tQA-2P-P4p" secondAttribute="trailing" constant="8" symbolic="YES" id="Wff-4u-pak"/>
                 <constraint firstItem="fE4-aD-ha0" firstAttribute="trailing" secondItem="GrD-A7-8h4" secondAttribute="trailingMargin" id="jlw-cB-eKu"/>
                 <constraint firstItem="lOM-ej-CDx" firstAttribute="top" secondItem="GrD-A7-8h4" secondAttribute="top" id="qPJ-ZF-HcZ"/>
                 <constraint firstItem="Bzz-7M-wX5" firstAttribute="top" secondItem="mbt-Qq-brx" secondAttribute="bottom" constant="14" id="r5h-2S-ot3"/>
@@ -83,7 +82,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="date" destination="mbt-Qq-brx" id="cTp-P8-FN1"/>
-                <outlet property="imageButton" destination="tQA-2P-P4p" id="eFy-ll-05H"/>
+                <outlet property="image" destination="lOM-ej-CDx" id="wa3-Lx-QyN"/>
                 <outlet property="place" destination="fE4-aD-ha0" id="ePm-Ku-5CS"/>
                 <outlet property="with" destination="Bzz-7M-wX5" id="R02-f6-c6m"/>
             </connections>

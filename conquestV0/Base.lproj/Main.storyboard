@@ -135,7 +135,7 @@
                         <viewControllerLayoutGuide type="top" id="oX9-yo-V35"/>
                         <viewControllerLayoutGuide type="bottom" id="WeI-Yh-kWM"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="nFd-E4-bxE" customClass="buildPinViewController">
+                    <view key="view" contentMode="scaleToFill" id="nFd-E4-bxE">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

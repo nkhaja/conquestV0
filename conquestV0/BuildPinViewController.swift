@@ -65,13 +65,13 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     
 
     
-    
     @IBAction func submitPin(sender: UIButton) {
         let newPin = Pin(user: currentUser, location: (selectedPin?.coordinate)!)
         newPin.date = datePicker.date
         newPin.image = pinPhoto.image
         newPin.details = descriptionBox.text
         newPin.title = titleField.text
+        newPin.placeName = locationField.text
         currentUser.addPin(newPin)
     }
     
@@ -79,6 +79,9 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         if segue.identifier == "pinIsSet" {
             if let mapViewController = segue.destinationViewController as? MapViewController {
                 mapViewController.currentUser = currentUser
+              
+                mapViewController.pinView?.canShowCallout = false
+            
             }
         }
     }

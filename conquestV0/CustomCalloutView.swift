@@ -11,13 +11,17 @@ import UIKit
 class CustomCalloutView: UIView {
     
 
+    
     @IBOutlet weak var image: UIImageView!
     
-    @IBOutlet weak var imageButton: UIButton!
     @IBOutlet weak var place: UILabel!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var with: UILabel!
     
     
+    @IBAction func testButton(sender: AnyObject) {
+        
+        print("button tapped")
+    }
     
 }

@@ -19,6 +19,8 @@
 		BDB8A4CE1D35B376003D72B2 /* CustomCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */; };
 		BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */; };
 		BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */; };
+		BDB8A4D71D3845F5003D72B2 /* CustomCalloutAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */; };
+		BDE2EAC31D38901400F5C9E4 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE2EAC21D38901400F5C9E4 /* Helper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCalloutView.xib; sourceTree = "<group>"; };
 		BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutView.swift; sourceTree = "<group>"; };
 		BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildPinViewController.swift; sourceTree = "<group>"; };
+		BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutAccessory.swift; sourceTree = "<group>"; };
+		BDE2EAC21D38901400F5C9E4 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +92,9 @@
 			isa = PBXGroup;
 			children = (
 				BDB8A4BD1D33FD7A003D72B2 /* User.swift */,
+				BDE2EAC21D38901400F5C9E4 /* Helper.swift */,
 				BDB8A4C11D3569A6003D72B2 /* Pin.swift */,
+				BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */,
 				BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */,
 			);
 			name = Objects;
@@ -175,10 +181,12 @@
 			files = (
 				BDB8A4BE1D33FD7A003D72B2 /* User.swift in Sources */,
 				BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */,
+				BDB8A4D71D3845F5003D72B2 /* CustomCalloutAccessory.swift in Sources */,
 				BDB8A4AD1D33FD36003D72B2 /* SecondViewController.swift in Sources */,
 				BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */,
 				BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */,
 				BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */,
+				BDE2EAC31D38901400F5C9E4 /* Helper.swift in Sources */,
 				BDB8A4A91D33FD36003D72B2 /* AppDelegate.swift in Sources */,
 				BDB8A4AB1D33FD36003D72B2 /* MapViewController.swift in Sources */,
 			);
@@ -330,6 +338,7 @@
 				BDB8A4BB1D33FD36003D72B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

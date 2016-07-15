@@ -25,14 +25,18 @@ class MapViewController: UIViewController {
     var resultSearchController:UISearchController? = nil
     var currentUser: User = User(name: "test",password: "test",email: "test")
     var keyForSearchAnnotation: String?
+    var pinView: MKPinAnnotationView?
     
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "buildPin" {
-            if let buildPinViewController = segue.destinationViewController as? BuildPinViewController {
+            if let buildPinViewController = segue.destinationViewController as?
+                BuildPinViewController {
                 buildPinViewController.selectedPin = selectedPin
                 buildPinViewController.currentUser = currentUser
+                pinView?.canShowCallout = false
+               
         }
     }
 }
@@ -62,6 +66,8 @@ class MapViewController: UIViewController {
             newPin.coordinate = value.location
             mapView.addAnnotation(newPin)
         }
+        
+        mapView.reloadInputViews()
     }
     
     func buildKey (annotation: CLLocationCoordinate2D) -> String {
@@ -70,7 +76,6 @@ class MapViewController: UIViewController {
     
     
 
-    
     
     func scaleUIImageToSize(let image: UIImage, let size: CGSize) -> UIImage {
         let hasAlpha = false
@@ -86,6 +91,13 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func pinSetterUnwind(sender: UIStoryboardSegue){
+         mapView.selectAnnotation(selectedPin!, animated: true)
+    }
+    
+    @IBAction func longPressed(sender: UILongPressGestureRecognizer)
+    {
+        print("longpressed")
+        //Different code
     }
     
   
@@ -116,6 +128,8 @@ class MapViewController: UIViewController {
         
         locationSearchTable.mapView = mapView
         locationSearchTable.handleMapSearchDelegate = self
+        
+        populatePins()
         
         mapView.delegate = self
     }
@@ -176,10 +190,18 @@ extension MapViewController : MKMapViewDelegate {
             return nil
         }
         let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView?.pinTintColor = UIColor.orangeColor()
-        pinView?.canShowCallout = true
+        
+        if(currentUser.pins[buildKey(annotation.coordinate)] == nil){
+            pinView?.canShowCallout = true
+        }
+        else{
+            pinView?.canShowCallout = false
+        }
+        
+        
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPointZero, size: smallSquare))
         button.setBackgroundImage(UIImage(named: "car"), forState: .Normal)
@@ -196,11 +218,12 @@ extension MapViewController : MKMapViewDelegate {
     
     
     
-    func mapView(mapView: MKMapView,
-                 didSelectAnnotationView view: MKAnnotationView)
-    {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
+        
+        
+        let currentPin = currentUser.pins[buildKey((view.annotation?.coordinate)!)]
        
-         if view.annotation is MKUserLocation || currentUser.pins[buildKey((view.annotation?.coordinate)!)] == nil
+         if view.annotation is MKUserLocation || currentPin == nil
         {
             // Don't proceed with custom callout
             return
@@ -210,26 +233,30 @@ extension MapViewController : MKMapViewDelegate {
         let calloutView = views[0] as! CustomCalloutView
         calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
         
-      
-        
+        calloutView.date.text = String(currentPin?.date)
+        calloutView.place.text = currentPin?.placeName
+        calloutView.image.image = currentPin?.image
+
         view.addSubview(calloutView)
+    
     }
 
 
 
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-       print("Nikolas is cool")
-        if view.isKindOfClass(CustomCalloutView)
+      
+        if view.isKindOfClass(MKPinAnnotationView)
         {
-            view.removeFromSuperview()
-            
+            //view.canShowCallout = false
             for subview in view.subviews
             {
                 subview.removeFromSuperview()
             }
         }
     }
-
+    
+    
+ 
 }
 
 
