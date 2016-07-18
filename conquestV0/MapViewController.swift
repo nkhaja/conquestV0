@@ -27,7 +27,9 @@ class MapViewController: UIViewController {
     var keyForSearchAnnotation: String?
     var pinView: MKPinAnnotationView?
     
+
     
+
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "buildPin" {
@@ -36,46 +38,10 @@ class MapViewController: UIViewController {
                 buildPinViewController.selectedPin = selectedPin
                 buildPinViewController.currentUser = currentUser
                 pinView?.canShowCallout = false
-               
         }
     }
 }
  
-    func customizePin(){
-        performSegueWithIdentifier("buildPin", sender: self)
-    }
-    
-    
-    
-    func getDirections(){
-        if let selectedPin = selectedPin {
-            let mapItem = MKMapItem(placemark: selectedPin)
-            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMapsWithLaunchOptions(launchOptions)
-        }
-    }
-    
-    
-    
-    
-    
-    func populatePins(){
-        let pins = currentUser.pins
-        for (_,value) in pins {
-            let newPin = MKPointAnnotation()
-            newPin.coordinate = value.location
-            mapView.addAnnotation(newPin)
-        }
-        
-        mapView.reloadInputViews()
-    }
-    
-    func buildKey (annotation: CLLocationCoordinate2D) -> String {
-        return String(annotation.latitude) + String(annotation.longitude)
-    }
-    
-    
-
     
     func scaleUIImageToSize(let image: UIImage, let size: CGSize) -> UIImage {
         let hasAlpha = false
@@ -90,8 +56,13 @@ class MapViewController: UIViewController {
         return scaledImage
     }
     
+    
+    
     @IBAction func pinSetterUnwind(sender: UIStoryboardSegue){
-         mapView.selectAnnotation(selectedPin!, animated: true)
+        
+        populatePins()
+        mapView.selectAnnotation(selectedPin!, animated: true)
+        
     }
     
     @IBAction func longPressed(sender: UILongPressGestureRecognizer)
@@ -104,6 +75,11 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // LONG PRESS FEATURE
+        var uilgr = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
+        uilgr.minimumPressDuration = 2.0
+        mapView.addGestureRecognizer(uilgr)
 
         // BASIC LOCATION MANAGER SETTINGS
         locationManager.delegate = self
@@ -138,6 +114,95 @@ class MapViewController: UIViewController {
 
 
 
+
+
+
+
+
+
+extension MapViewController{
+    
+    //MARK: Helper Functions
+    
+    func customizePin(){
+        performSegueWithIdentifier("buildPin", sender: self)
+    }
+    
+    static func getDirections(selectedPin: MKPlacemark? ){
+        if let selectedPin = selectedPin {
+            let mapItem = MKMapItem(placemark: selectedPin)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMapsWithLaunchOptions(launchOptions)
+        }
+    }
+    
+    
+    func populatePins(){
+        let pins = currentUser.pins
+        for (_,value) in pins {
+            let newPin = MKPointAnnotation()
+            newPin.coordinate = value.location
+            mapView.addAnnotation(newPin)
+        }
+        
+        mapView.reloadInputViews()
+    }
+    
+    
+    func buildKey (annotation: CLLocationCoordinate2D) -> String {
+        return String(annotation.latitude) + String(annotation.longitude)
+    }
+
+    func addAnnotation(gestureRecognizer:UIGestureRecognizer){
+        if gestureRecognizer.state == UIGestureRecognizerState.Began {
+            let touchPoint = gestureRecognizer.locationInView(mapView)
+            let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = newCoordinates
+            
+            CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude), completionHandler: {(placemarks, error) -> Void in
+                if error != nil {
+                    print("Reverse geocoder failed with error" + error!.localizedDescription)
+                    return
+                }
+                
+                if placemarks!.count > 0 {
+                    let pm = placemarks![0]
+                    
+                    
+                    // not all places have thoroughfare & subThoroughfare so validate those values
+                    annotation.title = pm.name //+ ", " + pm.subThoroughfare!
+                    if let city = pm.locality, let state = pm.administrativeArea{
+                        annotation.subtitle = "\(city) \(state)"
+                    }
+                    
+                    
+                    //CONSIDER USING THIS DETAIL FOR THE MAP INSTEAD!
+                    //annotation.subtitle = pm.subLocality
+                    self.selectedPin = MKPlacemark(placemark: pm)
+                    self.mapView.addAnnotation(annotation)
+                   
+                }
+                else {
+                    annotation.title = "Unknown Place"
+                    self.mapView.addAnnotation(annotation)
+                    print("Problem with the data received from geocoder")
+                }
+                //places.append(["name":annotation.title,"latitude":"\(newCoordinates.latitude)","longitude":"\(newCoordinates.longitude)"])
+            })
+        }
+    }
+
+
+
+}
+
+
+
+
+
+
+
 extension MapViewController : CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if status == .AuthorizedWhenInUse {
@@ -157,6 +222,10 @@ extension MapViewController : CLLocationManagerDelegate {
         print("error:: \(error)")
     }
 }
+
+
+
+
 
 
 extension MapViewController: HandleMapSearch {
@@ -195,7 +264,7 @@ extension MapViewController : MKMapViewDelegate {
         pinView?.pinTintColor = UIColor.orangeColor()
         
         if(currentUser.pins[buildKey(annotation.coordinate)] == nil){
-            pinView?.canShowCallout = true
+            pinView?.canShowCallout = true // Maybe here?
         }
         else{
             pinView?.canShowCallout = false
@@ -216,6 +285,7 @@ extension MapViewController : MKMapViewDelegate {
     
     
     
+// MARK: Deal With Custom Annotations Below
     
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
@@ -254,9 +324,6 @@ extension MapViewController : MKMapViewDelegate {
             }
         }
     }
-    
-    
- 
 }
 
 

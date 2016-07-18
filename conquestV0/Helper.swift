@@ -7,9 +7,15 @@
 //
 
 import Foundation
+import MapKit
 
 class Helper{
     
-    
-    
+    static func getDirections(selectedPin: MKPlacemark? ){
+        if let selectedPin = selectedPin {
+            let mapItem = MKMapItem(placemark: selectedPin)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMapsWithLaunchOptions(launchOptions)
+        }
+    }
 }
