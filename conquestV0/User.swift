@@ -9,24 +9,52 @@
 import UIKit
 import Parse
 
-class User: NSObject {
-    let name:String
-    let password: String
-    let email: String
-    var pins:[String: Pin] = [:]
+class User: PFObject, PFSubclassing {
+    
+    @NSManaged var username: String?
+    @NSManaged var password: String?
+    @NSManaged var email: String?
+    @NSManaged var pins: NSMutableArray
+    //@NSManaged var pins: NSMutableArray
+
     // Set of Mission
     
     
-    init(name: String, password: String, email: String){
-        self.name = name
-        self.password = password
-        self.email = email
+    //MARK: PFSubclassing Protocol
+    
+    static func parseClassName() -> String {
+        return "User"
     }
+    
+    
+    init(username: String){
+        super.init()
+        self.username = username
+    }
+    
+    override class func initialize() {
+        var onceToken : dispatch_once_t = 0;
+        dispatch_once(&onceToken) {
+            // inform Parse about this subclass
+            self.registerSubclass()
+        }
+    }
+    
     
     func addPin(pin:Pin){
-        pins[pin.key] = pin
+        pins.addObject(pin)
+        pin.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) -> Void in
+            if (success) {
+                print("object saved")
+            } else {
+                print("error")
+            }
+
+        }
+        
+        
+        
     }
-    
-    
 
 }

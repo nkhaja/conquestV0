@@ -8,12 +8,13 @@
 
 import UIKit
 import MapKit
+import Parse
 
 class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var selectedPin:MKPlacemark? = nil
     let imagePicker = UIImagePickerController()
-    var currentUser:User! = nil
+    var currentUser: User!
     
     
     @IBOutlet weak var titleField: UITextField!
@@ -72,15 +73,19 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "pinIsSet" {
             if let mapViewController = segue.destinationViewController as? MapViewController {
-                let newPin = Pin(user: currentUser, location: (selectedPin?.coordinate)!)
-                newPin.date = datePicker.date
-                newPin.image = pinPhoto.image
-                newPin.details = descriptionBox.text
+              
+                
+                let newPin = Pin(place: (selectedPin?.coordinate)!)
+                
                 newPin.title = titleField.text
                 newPin.placeName = locationField.text
-                currentUser.addPin(newPin)
+                newPin.date = datePicker.date
+                newPin.details = descriptionBox.text
                 
-                mapViewController.currentUser = currentUser
+                let imagedata = UIImageJPEGRepresentation( pinPhoto.image!, 0.8)
+                newPin.imageFile = PFFile(data: imagedata!)
+               
+                currentUser.addPin(newPin)
                 mapViewController.pinView?.canShowCallout = false
             
                 mapViewController.mapView.removeAnnotations(mapViewController.mapView.annotations)

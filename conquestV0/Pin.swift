@@ -8,39 +8,50 @@
 
 import UIKit
 import MapKit
-class Pin: NSObject {
-    var image: UIImage? // set to text button.
-    var date: NSDate?
-    var user: User
-    var location: CLLocationCoordinate2D
-    var placeName: String?
-    var details: String?
-    var title: String?
-    var key: String
-
+import Parse
+class Pin: PFObject, PFSubclassing {
+    
+    
+    @NSManaged var user: PFUser?
+    @NSManaged var title: String?
+    @NSManaged var placeName: String?
+    @NSManaged var geoPoint: PFGeoPoint?
+    @NSManaged var date: NSDate
+    @NSManaged var details: String?
+    @NSManaged var key: String?
+    @NSManaged var imageFile: PFFile?
+    @NSManaged var tag: PFObject
+    
 
     
-    init(user:User, location: CLLocationCoordinate2D){
-        self.user = user
-        self.location = location
-        self.key = String(location.latitude) + String(location.longitude)
+    //MARK: PFSubclassing Protocol
+    
+    static func parseClassName() -> String {
+        return "Pin"
     }
     
-    
-    func setCurrentDate() -> NSDate{
-      return NSDate()
+     init (place: CLLocationCoordinate2D) { // removed the override from here. 
+        super.init()
+        user = PFUser.currentUser()
+        geoPoint = PFGeoPoint(latitude: place.latitude, longitude: place.longitude)
     }
     
-//    func setCustomDate() -> NSDate{
-//        date = NSDate()
-//        
-//    }
-//    
-// figure out how to do custom dates later
+    override class func initialize() {
+        var onceToken : dispatch_once_t = 0;
+        dispatch_once(&onceToken) {
+            // inform Parse about this subclass
+            self.registerSubclass()
+        }
+    }
     
 
-    func setPinLocation(lat :Double, lon:Double){
-        location = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    
+}
+
+extension PFGeoPoint {
+    
+    func location() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
     }
     
 }

@@ -20,8 +20,8 @@ class PinViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         if let mapViewController = mapViewController {
-           var pins = mapViewController.currentUser.pins
-            let keyArray = Array(pins.keys)
+           var pins = mapViewController.currentUser!.pins
+            //let keyArray = Array(pins.keys) // TODO: Update this class for Parse
         }
     }
 

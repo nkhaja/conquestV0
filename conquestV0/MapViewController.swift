@@ -11,6 +11,7 @@
 
 import UIKit
 import MapKit
+import Parse
 
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark)
@@ -23,11 +24,15 @@ class MapViewController: UIViewController {
     var selectedPin:MKPlacemark? = nil
     var locationManager = CLLocationManager()
     var resultSearchController:UISearchController? = nil
-    var currentUser: User = User(name: "test",password: "test",email: "test")
+    var currentUser: User?
     var keyForSearchAnnotation: String?
     var pinView: MKPinAnnotationView?
     
 
+    func setUser(){
+        self.currentUser = User()
+    }
+    
     
 
     
@@ -76,6 +81,8 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUser()
+        
         // LONG PRESS FEATURE
         var uilgr = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
         uilgr.minimumPressDuration = 2.0
@@ -113,13 +120,6 @@ class MapViewController: UIViewController {
 
 
 
-
-
-
-
-
-
-
 extension MapViewController{
     
     //MARK: Helper Functions
@@ -138,10 +138,17 @@ extension MapViewController{
     
     
     func populatePins(){
-        let pins = currentUser.pins
-        for (_,value) in pins {
+        var pins: [Pin] = []
+        let pinQuery = PFQuery(className: "Pin")
+        pinQuery.whereKey("user", equalTo:PFUser.currentUser()!)
+        pinQuery.includeKey("user")
+        pinQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
+            pins = result as? [Pin] ?? []
+        }
+        
+        for p in pins {
             let newPin = MKPointAnnotation()
-            newPin.coordinate = value.location
+            newPin.coordinate = p.geoPoint!.location()
             mapView.addAnnotation(newPin)
         }
         
@@ -253,6 +260,20 @@ extension MapViewController: HandleMapSearch {
 
 
 extension MapViewController : MKMapViewDelegate {
+    func queryPinAtGeoPoint(annotation: MKAnnotation) -> [Pin]{
+        var currentPins:[Pin] = []
+        let pinQuery = PFQuery(className: "Pin")
+        pinQuery.whereKey("user", equalTo:PFUser.currentUser()!)
+        pinQuery.whereKey("geoLocation", equalTo: PFGeoPoint(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude))
+        
+  
+        pinQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
+            currentPins = result as? [Pin] ?? []
+        }
+        return currentPins
+        
+        }
+    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
         if annotation is MKUserLocation {
             //return nil so map view draws "blue dot" for standard user location
@@ -263,7 +284,11 @@ extension MapViewController : MKMapViewDelegate {
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView?.pinTintColor = UIColor.orangeColor()
         
-        if(currentUser.pins[buildKey(annotation.coordinate)] == nil){
+
+        let currentPins = queryPinAtGeoPoint(annotation)
+        
+        
+        if(currentPins.count == 0){
             pinView?.canShowCallout = true // Maybe here?
         }
         else{
@@ -291,22 +316,35 @@ extension MapViewController : MKMapViewDelegate {
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
         
         
-        let currentPin = currentUser.pins[buildKey((view.annotation?.coordinate)!)]
+        let pinHolder = queryPinAtGeoPoint(view.annotation!)
+         // Should be optional
        
-         if view.annotation is MKUserLocation || currentPin == nil
+         if view.annotation is MKUserLocation || pinHolder.count == 0
         {
             // Don't proceed with custom callout
             return
         }
-   
+        
+        let currentPin: Pin? = pinHolder[0]
         let views = NSBundle.mainBundle().loadNibNamed("CustomCalloutView", owner: nil, options: nil)
         let calloutView = views[0] as! CustomCalloutView
         calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
         
-        calloutView.date.text = String(currentPin?.date)
-        calloutView.place.text = currentPin?.placeName
-        calloutView.image.image = currentPin?.image
-
+        calloutView.date.text = String(currentPin!.date)
+        calloutView.place.text = currentPin!.placeName
+        
+        let userImageFile = currentPin?["imageFile"] as? PFFile
+        userImageFile!.getDataInBackgroundWithBlock {
+            (imageData: NSData?, error: NSError?) -> Void in
+            if (error == nil) {
+                let image = UIImage(data:imageData!)
+                calloutView.image.image = image
+            }
+        }
+        
+//        calloutView.image.image = currentPin.imageFile
+//        
+//
         view.addSubview(calloutView)
     
     }
