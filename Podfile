@@ -11,6 +11,7 @@ target 'conquestV0' do
     pod 'Parse'
     pod 'ParseFacebookUtilsV4'
     pod 'ParseUI'
+    pod 'FBAnnotationClusteringSwift'
 
 
 end

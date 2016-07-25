@@ -12,62 +12,55 @@
 import UIKit
 import MapKit
 import Parse
+import FBAnnotationClusteringSwift
 
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark)
 }
+// UIViewController
 
-class MapViewController: UIViewController {
+class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
-    
+
+    var parseLoginHelper: ParseLoginHelper!
+    let clusteringManager = FBClusteringManager()
     var selectedPin:MKPlacemark? = nil
     var locationManager = CLLocationManager()
     var resultSearchController:UISearchController? = nil
-    var currentUser: User?
+    var currentUser: PFUser?
     var keyForSearchAnnotation: String?
     var pinView: MKPinAnnotationView?
-    
+    var pins: [Pin] = []
+    var clusters:[FBAnnotation] = []
+    weak var buildPinViewController: BuildPinViewController!
 
     func setUser(){
-        self.currentUser = User()
+        self.currentUser = PFUser.currentUser()
     }
     
     
-
-    
+  
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "buildPin" {
             if let buildPinViewController = segue.destinationViewController as?
                 BuildPinViewController {
                 buildPinViewController.selectedPin = selectedPin
-                buildPinViewController.currentUser = currentUser
-                pinView?.canShowCallout = false
+                buildPinViewController.currentUser = currentUser!
+                //pinView?.canShowCallout = false
         }
     }
 }
  
-    
-    func scaleUIImageToSize(let image: UIImage, let size: CGSize) -> UIImage {
-        let hasAlpha = false
-        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
-        
-        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-        image.drawInRect(CGRect(origin: CGPointZero, size: size))
-        
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return scaledImage
-    }
+
+
     
     
     
     @IBAction func pinSetterUnwind(sender: UIStoryboardSegue){
         
-        populatePins()
-        mapView.selectAnnotation(selectedPin!, animated: true)
-        
+        pins = MapHelper.populatePins(self.mapView)
+        //mapView.selectAnnotation(selectedPin!, animated: true)
     }
     
     @IBAction func longPressed(sender: UILongPressGestureRecognizer)
@@ -76,12 +69,36 @@ class MapViewController: UIViewController {
         //Different code
     }
     
+    @IBAction func logOutButton(sender: AnyObject) {
+        print("logging out user")
+        PFUser.logOut()
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func toggleSideMenu(sender: AnyObject) {
+        toggleSideMenuView()
+        print("button pressed")
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+        if (PFUser.currentUser() != nil) {
+            
+        }
+    }
   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        buildPinViewController = storyboard.instantiateViewControllerWithIdentifier("BuildPinViewController") as! BuildPinViewController
+        // Instantiate BuildPinViewController
+        buildPinViewController.delegate = self
+        //self.tabBarController?.delegate = self
         setUser()
+        pins = MapHelper.populatePins(self.mapView)
+        clusters = MapHelper.prepareClustering(pins)
+
         
         // LONG PRESS FEATURE
         var uilgr = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
@@ -95,7 +112,7 @@ class MapViewController: UIViewController {
         locationManager.requestLocation()
 
         // SEARCH BAR
-        let locationSearchTable = storyboard!.instantiateViewControllerWithIdentifier("LocationSearchTable") as! LocationSearchTable
+        let locationSearchTable = storyboard.instantiateViewControllerWithIdentifier("LocationSearchTable") as! LocationSearchTable
         resultSearchController = UISearchController(searchResultsController: locationSearchTable)
         resultSearchController?.searchResultsUpdater = locationSearchTable
         
@@ -112,9 +129,8 @@ class MapViewController: UIViewController {
         locationSearchTable.mapView = mapView
         locationSearchTable.handleMapSearchDelegate = self
         
-        populatePins()
-        
         mapView.delegate = self
+
     }
 }
 
@@ -128,37 +144,6 @@ extension MapViewController{
         performSegueWithIdentifier("buildPin", sender: self)
     }
     
-    static func getDirections(selectedPin: MKPlacemark? ){
-        if let selectedPin = selectedPin {
-            let mapItem = MKMapItem(placemark: selectedPin)
-            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMapsWithLaunchOptions(launchOptions)
-        }
-    }
-    
-    
-    func populatePins(){
-        var pins: [Pin] = []
-        let pinQuery = PFQuery(className: "Pin")
-        pinQuery.whereKey("user", equalTo:PFUser.currentUser()!)
-        pinQuery.includeKey("user")
-        pinQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
-            pins = result as? [Pin] ?? []
-        }
-        
-        for p in pins {
-            let newPin = MKPointAnnotation()
-            newPin.coordinate = p.geoPoint!.location()
-            mapView.addAnnotation(newPin)
-        }
-        
-        mapView.reloadInputViews()
-    }
-    
-    
-    func buildKey (annotation: CLLocationCoordinate2D) -> String {
-        return String(annotation.latitude) + String(annotation.longitude)
-    }
 
     func addAnnotation(gestureRecognizer:UIGestureRecognizer){
         if gestureRecognizer.state == UIGestureRecognizerState.Began {
@@ -199,9 +184,6 @@ extension MapViewController{
             })
         }
     }
-
-
-
 }
 
 
@@ -225,11 +207,11 @@ extension MapViewController : CLLocationManagerDelegate {
         }
     }
     
+    
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("error:: \(error)")
     }
 }
-
 
 
 
@@ -260,7 +242,8 @@ extension MapViewController: HandleMapSearch {
 
 
 extension MapViewController : MKMapViewDelegate {
-    func queryPinAtGeoPoint(annotation: MKAnnotation) -> [Pin]{
+    
+    func queryPinAtGeoPoint(annotation: MKAnnotation, completionHandler:([Pin])->Void){
         var currentPins:[Pin] = []
         let pinQuery = PFQuery(className: "Pin")
         pinQuery.whereKey("user", equalTo:PFUser.currentUser()!)
@@ -269,32 +252,44 @@ extension MapViewController : MKMapViewDelegate {
   
         pinQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
             currentPins = result as? [Pin] ?? []
+            completionHandler(currentPins)
         }
-        return currentPins
-        
-        }
+    }
+    
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
+        var reuseId = ""
         if annotation is MKUserLocation {
             //return nil so map view draws "blue dot" for standard user location
             return nil
         }
-        let reuseId = "pin"
+        
+        else if(annotation.isKindOfClass(FBAnnotationCluster)) {
+                reuseId = "Cluster"
+                var clusterView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+                clusterView = FBAnnotationClusterView(annotation: annotation, reuseIdentifier: reuseId, options: nil)
+                return clusterView
+        }
+        
+
+        reuseId = "pin"
         pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView?.pinTintColor = UIColor.orangeColor()
         
+        
+        
 
-        let currentPins = queryPinAtGeoPoint(annotation)
+        //let currentPins = queryPinAtGeoPoint(annotation)
         
-        
-        if(currentPins.count == 0){
-            pinView?.canShowCallout = true // Maybe here?
+         queryPinAtGeoPoint(annotation) { currentPins in
+            if(currentPins.count == 0){
+                self.pinView?.canShowCallout = true // Maybe here?
+            }
+            else{
+                self.pinView?.canShowCallout = false
+            }
         }
-        else{
-            pinView?.canShowCallout = false
-        }
-        
         
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPointZero, size: smallSquare))
@@ -303,50 +298,50 @@ extension MapViewController : MKMapViewDelegate {
         
         
         //button.addTarget(self, action: "getDirections", forControlEvents: .TouchUpInside)
-        button.addTarget(self, action: "customizePin", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(MapViewController.customizePin), forControlEvents: .TouchUpInside)
         pinView?.leftCalloutAccessoryView = button
+        
         return pinView
-    }
     
     
+}
     
 // MARK: Deal With Custom Annotations Below
     
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
         
+        print("didSelectAnnotationCalled")
         
-        let pinHolder = queryPinAtGeoPoint(view.annotation!)
-         // Should be optional
-       
-         if view.annotation is MKUserLocation || pinHolder.count == 0
-        {
-            // Don't proceed with custom callout
-            return
-        }
+        // let pinHolder = queryPinAtGeoPoint(view.annotation!)
         
-        let currentPin: Pin? = pinHolder[0]
-        let views = NSBundle.mainBundle().loadNibNamed("CustomCalloutView", owner: nil, options: nil)
-        let calloutView = views[0] as! CustomCalloutView
-        calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
+         queryPinAtGeoPoint(view.annotation!) { pinHolder in
         
-        calloutView.date.text = String(currentPin!.date)
-        calloutView.place.text = currentPin!.placeName
-        
-        let userImageFile = currentPin?["imageFile"] as? PFFile
-        userImageFile!.getDataInBackgroundWithBlock {
-            (imageData: NSData?, error: NSError?) -> Void in
-            if (error == nil) {
-                let image = UIImage(data:imageData!)
-                calloutView.image.image = image
+            if view.annotation is MKUserLocation || pinHolder.count == 0
+            {
+                // Don't proceed with custom callout
+                return
             }
-        }
+            
+            let currentPin: Pin? = pinHolder[0]
+            let views = NSBundle.mainBundle().loadNibNamed("CustomCalloutView", owner: nil, options: nil)
+            let calloutView = views[0] as! CustomCalloutView
+            calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
+            
+            calloutView.date.text = String(currentPin!.date)
+            calloutView.place.text = currentPin!.placeName
+            
+            let userImageFile = currentPin?["imageFile"] as? PFFile
+            userImageFile!.getDataInBackgroundWithBlock {
+                (imageData: NSData?, error: NSError?) -> Void in
+                if (error == nil) {
+                    let image = UIImage(data:imageData!)
+                    calloutView.image.image = image
+                }
+            }
+            view.addSubview(calloutView)
         
-//        calloutView.image.image = currentPin.imageFile
-//        
-//
-        view.addSubview(calloutView)
-    
+        }
     }
 
 
@@ -362,7 +357,32 @@ extension MapViewController : MKMapViewDelegate {
             }
         }
     }
+    
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool){
+        NSOperationQueue().addOperationWithBlock({
+            let mapBoundsWidth = Double(self.mapView.bounds.size.width)
+            let mapRectWidth:Double = self.mapView.visibleMapRect.size.width
+            let scale:Double = mapBoundsWidth / mapRectWidth
+            let annotationArray = self.clusteringManager.clusteredAnnotationsWithinMapRect(self.mapView.visibleMapRect, withZoomScale:scale)
+//            self.clusteringManager.displayAnnotations(annotationArray, onMapView:self.mapView)
+        })
+    }
+    
+    
 }
+
+// MARK: - BuildPinViewController
+extension MapViewController: BuildPinViewControllerDelegate {
+    func updatePins() {
+        print("update is being called")
+        pins = MapHelper.populatePins(self.mapView)
+
+    }
+}
+
+
+
 
 
 

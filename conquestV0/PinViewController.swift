@@ -7,45 +7,54 @@
 //
 
 import UIKit
+import Parse
 
 class PinViewController: UIViewController {
-    let pins = [:]
+    var pins = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     var mapViewController: MapViewController?
 
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        if let mapViewController = mapViewController {
-           var pins = mapViewController.currentUser!.pins
-            //let keyArray = Array(pins.keys) // TODO: Update this class for Parse
+    @IBOutlet weak var tableView: UITableView!
+    
+    func getPins(){
+    let pinQuery = PFQuery(className: "Pin")
+    pinQuery.whereKey("user", equalTo: PFUser.currentUser()!)
+    pinQuery.includeKey("user")
+    pinQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
+        self.pins = result as? [Pin] ?? []
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        getPins()
     }
+
+
+
 
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 //pins.count
+        print(pins.count)
+        return pins.count
     }
     
-    
-    
-    
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("pinCell") as! PinTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("pinCell", forIndexPath: indexPath) as! PinTableViewCell
+        //cell.textLabel?.text = pins[indexPath.item].title
+        let thisPin = pins[indexPath.row] as! Pin
+        cell.titleLabel.text = thisPin.title
+        print(thisPin.title)
         
-        
- 
         return cell
-        
     }
 
 }

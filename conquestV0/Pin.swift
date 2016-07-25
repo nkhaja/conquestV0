@@ -16,11 +16,11 @@ class Pin: PFObject, PFSubclassing {
     @NSManaged var title: String?
     @NSManaged var placeName: String?
     @NSManaged var geoPoint: PFGeoPoint?
-    @NSManaged var date: NSDate
+    @NSManaged var date: NSDate?
     @NSManaged var details: String?
-    @NSManaged var key: String?
+    //@NSManaged var key: String?
     @NSManaged var imageFile: PFFile?
-    @NSManaged var tag: PFObject
+    //@NSManaged var tag: PFObject
     
 
     
@@ -30,7 +30,11 @@ class Pin: PFObject, PFSubclassing {
         return "Pin"
     }
     
-     init (place: CLLocationCoordinate2D) { // removed the override from here. 
+    override init(){
+        super.init()
+    }
+    
+     init (place: CLLocationCoordinate2D) { // removed the override from here.
         super.init()
         user = PFUser.currentUser()
         geoPoint = PFGeoPoint(latitude: place.latitude, longitude: place.longitude)
@@ -51,6 +55,7 @@ class Pin: PFObject, PFSubclassing {
 extension PFGeoPoint {
     
     func location() -> CLLocationCoordinate2D {
+        print(#function, self.latitude, self.longitude)
         return CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
     }
     

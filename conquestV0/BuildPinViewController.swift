@@ -10,21 +10,23 @@ import UIKit
 import MapKit
 import Parse
 
+protocol BuildPinViewControllerDelegate {
+    func updatePins()
+}
+
 class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var selectedPin:MKPlacemark? = nil
     let imagePicker = UIImagePickerController()
-    var currentUser: User!
+    var currentUser: PFUser?
+    var delegate: BuildPinViewControllerDelegate?
     
     
     @IBOutlet weak var titleField: UITextField!
     @IBOutlet weak var locationField: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
-    
     @IBOutlet weak var pinPhoto: UIImageView!
-    
     @IBOutlet weak var descriptionBox: UITextView!
-
     @IBAction func setPhotoButton(sender: UIButton) {
         
         imagePicker.allowsEditing = false
@@ -79,15 +81,15 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
                 
                 newPin.title = titleField.text
                 newPin.placeName = locationField.text
-                newPin.date = datePicker.date
+                //newPin.date = datePicker.date
                 newPin.details = descriptionBox.text
                 
                 let imagedata = UIImageJPEGRepresentation( pinPhoto.image!, 0.8)
                 newPin.imageFile = PFFile(data: imagedata!)
                
-                currentUser.addPin(newPin)
-                mapViewController.pinView?.canShowCallout = false
-            
+                addPin(newPin)
+                
+                //mapViewController.pinView?.canShowCallout = false
                 mapViewController.mapView.removeAnnotations(mapViewController.mapView.annotations)
             }
         }
@@ -115,6 +117,30 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func addPin(pin:Pin){
+        
+        let newPin = PFObject(className: "Pin")
+        newPin["user"] = pin.user
+        newPin["title"] = pin.title
+        newPin["placeName"] = pin.placeName
+        newPin["geoLocation"] = pin.geoPoint
+        newPin["imageFile"] = pin.imageFile
+        newPin["details"] = pin.details
+        //newPin["date"] = pin.date
+        
+        newPin.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) -> Void in
+            if (success) {
+                print("object saved")
+                // update pins in app
+                self.delegate?.updatePins()
+            } else {
+                print("error")
+            }
+            
+        }
     }
 }
     

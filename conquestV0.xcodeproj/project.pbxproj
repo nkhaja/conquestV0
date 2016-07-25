@@ -8,13 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		115C623999957A7002D3BCC1 /* Pods_conquestV0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47BF4385079DD257C6D0786B /* Pods_conquestV0.framework */; };
+		BD07CACA1D414ED200A4FF1C /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD07CAC91D414ED200A4FF1C /* LogInViewController.swift */; };
+		BD07CACC1D414FB500A4FF1C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */; };
+		BD2A35E11D419833009863B8 /* MapHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E01D419833009863B8 /* MapHelper.swift */; };
+		BD2A35E31D42A245009863B8 /* FriendSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */; };
+		BD2A35E61D42A2F1009863B8 /* FriendSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */; };
+		BD2A35E81D42A351009863B8 /* ParseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E71D42A351009863B8 /* ParseHelper.swift */; };
+		BD2A35F41D42BF60009863B8 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */; };
+		BD2A35F51D42BF60009863B8 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */; };
+		BD2A35F71D42BFAA009863B8 /* MyMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */; };
+		BD2A35F91D42D0E3009863B8 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */; };
+		BD2A35FB1D42D450009863B8 /* ProtoMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */; };
+		BD2A35FD1D42D6A2009863B8 /* ProtoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */; };
+		BD2B17E81D4062A5002E70FA /* ParseLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2B17E71D4062A5002E70FA /* ParseLoginHelper.swift */; };
+		BD2B17EA1D406437002E70FA /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2B17E91D406437002E70FA /* ErrorHandling.swift */; };
+		BDAC65711D3FEF0A002515D2 /* CustomPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAC65701D3FEF0A002515D2 /* CustomPin.swift */; };
 		BDB8A4A91D33FD36003D72B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4A81D33FD36003D72B2 /* AppDelegate.swift */; };
 		BDB8A4AB1D33FD36003D72B2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */; };
 		BDB8A4AD1D33FD36003D72B2 /* PinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4AC1D33FD36003D72B2 /* PinViewController.swift */; };
 		BDB8A4B01D33FD36003D72B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4AE1D33FD36003D72B2 /* Main.storyboard */; };
 		BDB8A4B21D33FD36003D72B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4B11D33FD36003D72B2 /* Assets.xcassets */; };
 		BDB8A4B51D33FD36003D72B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4B31D33FD36003D72B2 /* LaunchScreen.storyboard */; };
-		BDB8A4BE1D33FD7A003D72B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4BD1D33FD7A003D72B2 /* User.swift */; };
 		BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */; };
 		BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4C11D3569A6003D72B2 /* Pin.swift */; };
 		BDB8A4CE1D35B376003D72B2 /* CustomCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */; };
@@ -29,6 +43,21 @@
 		0942E1199A48791CDC7BEF0E /* Pods-conquestV0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conquestV0.release.xcconfig"; path = "Pods/Target Support Files/Pods-conquestV0/Pods-conquestV0.release.xcconfig"; sourceTree = "<group>"; };
 		47BF4385079DD257C6D0786B /* Pods_conquestV0.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_conquestV0.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		619E6C05F97F9972259DF14A /* Pods-conquestV0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conquestV0.debug.xcconfig"; path = "Pods/Target Support Files/Pods-conquestV0/Pods-conquestV0.debug.xcconfig"; sourceTree = "<group>"; };
+		BD07CAC91D414ED200A4FF1C /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		BD2A35E01D419833009863B8 /* MapHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapHelper.swift; sourceTree = "<group>"; };
+		BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSearchViewController.swift; sourceTree = "<group>"; };
+		BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSearchTableViewCell.swift; sourceTree = "<group>"; };
+		BD2A35E71D42A351009863B8 /* ParseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseHelper.swift; sourceTree = "<group>"; };
+		BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ENSideMenu.swift; path = "../../../ENSwiftSideMenu-master/Library/ENSideMenu.swift"; sourceTree = "<group>"; };
+		BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ENSideMenuNavigationController.swift; path = "../../../ENSwiftSideMenu-master/Library/ENSideMenuNavigationController.swift"; sourceTree = "<group>"; };
+		BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyMenuTableViewController.swift; path = "../../../ENSwiftSideMenu-master/Example/SwiftSideMenu/MyMenuTableViewController.swift"; sourceTree = "<group>"; };
+		BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyNavigationController.swift; path = "../../../ENSwiftSideMenu-master/Example/SwiftSideMenu/MyNavigationController.swift"; sourceTree = "<group>"; };
+		BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoMenuViewController.swift; sourceTree = "<group>"; };
+		BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtoTableViewCell.swift; path = conquestV0/ProtoTableViewCell.swift; sourceTree = "<group>"; };
+		BD2B17E71D4062A5002E70FA /* ParseLoginHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseLoginHelper.swift; sourceTree = "<group>"; };
+		BD2B17E91D406437002E70FA /* ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
+		BDAC65701D3FEF0A002515D2 /* CustomPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPin.swift; sourceTree = "<group>"; };
 		BDB8A4A51D33FD35003D72B2 /* conquestV0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conquestV0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB8A4A81D33FD36003D72B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -37,7 +66,6 @@
 		BDB8A4B11D33FD36003D72B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BDB8A4B41D33FD36003D72B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BDB8A4B61D33FD36003D72B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BDB8A4BD1D33FD7A003D72B2 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationSearchTable.swift; sourceTree = "<group>"; };
 		BDB8A4C11D3569A6003D72B2 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCalloutView.xib; sourceTree = "<group>"; };
@@ -45,7 +73,7 @@
 		BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildPinViewController.swift; sourceTree = "<group>"; };
 		BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutAccessory.swift; sourceTree = "<group>"; };
 		BDE2EAC21D38901400F5C9E4 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTableViewCell.swift; sourceTree = "<group>"; };
+		BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTableViewCell.swift; path = conquestV0/PinTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +105,40 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BD2A35E41D42A27B009863B8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */,
+				BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */,
+				BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */,
+			);
+			name = Views;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		BD2A35E91D42B96F009863B8 /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */,
+				BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */,
+				BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */,
+				BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */,
+				BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */,
+			);
+			name = Sidebar;
+			sourceTree = "<group>";
+		};
+		BD2B17E21D406061002E70FA /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BD2B17E71D4062A5002E70FA /* ParseLoginHelper.swift */,
+				BD2B17E91D406437002E70FA /* ErrorHandling.swift */,
+				BD2A35E01D419833009863B8 /* MapHelper.swift */,
+				BD2A35E71D42A351009863B8 /* ParseHelper.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		BDB8A49C1D33FD35003D72B2 = {
 			isa = PBXGroup;
 			children = (
@@ -99,12 +161,10 @@
 			isa = PBXGroup;
 			children = (
 				BDB8A4A81D33FD36003D72B2 /* AppDelegate.swift */,
+				BD2B17E21D406061002E70FA /* Helpers */,
+				BD2A35E91D42B96F009863B8 /* Sidebar */,
+				BD2A35E41D42A27B009863B8 /* Views */,
 				BDB8A4D31D36C2EF003D72B2 /* ViewControllers */,
-				BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */,
-				BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */,
-				BDB8A4AC1D33FD36003D72B2 /* PinViewController.swift */,
-				BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */,
-				BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */,
 				BDB8A4BC1D33FD41003D72B2 /* Objects */,
 				BDB8A4AE1D33FD36003D72B2 /* Main.storyboard */,
 				BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */,
@@ -118,9 +178,9 @@
 		BDB8A4BC1D33FD41003D72B2 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				BDB8A4BD1D33FD7A003D72B2 /* User.swift */,
 				BDE2EAC21D38901400F5C9E4 /* Helper.swift */,
 				BDB8A4C11D3569A6003D72B2 /* Pin.swift */,
+				BDAC65701D3FEF0A002515D2 /* CustomPin.swift */,
 				BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */,
 				BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */,
 			);
@@ -130,6 +190,13 @@
 		BDB8A4D31D36C2EF003D72B2 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */,
+				BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */,
+				BDB8A4AC1D33FD36003D72B2 /* PinViewController.swift */,
+				BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */,
+				BD07CAC91D414ED200A4FF1C /* LogInViewController.swift */,
+				BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */,
+				BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -257,15 +324,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDB8A4BE1D33FD7A003D72B2 /* User.swift in Sources */,
+				BD07CACA1D414ED200A4FF1C /* LogInViewController.swift in Sources */,
 				BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */,
+				BD2B17E81D4062A5002E70FA /* ParseLoginHelper.swift in Sources */,
+				BD2A35F51D42BF60009863B8 /* ENSideMenuNavigationController.swift in Sources */,
 				BDB8A4D71D3845F5003D72B2 /* CustomCalloutAccessory.swift in Sources */,
 				BDE2EAC71D398E6700F5C9E4 /* PinTableViewCell.swift in Sources */,
+				BD2A35E81D42A351009863B8 /* ParseHelper.swift in Sources */,
 				BDB8A4AD1D33FD36003D72B2 /* PinViewController.swift in Sources */,
+				BDAC65711D3FEF0A002515D2 /* CustomPin.swift in Sources */,
+				BD2A35E11D419833009863B8 /* MapHelper.swift in Sources */,
+				BD2A35FD1D42D6A2009863B8 /* ProtoTableViewCell.swift in Sources */,
 				BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */,
+				BD2A35E61D42A2F1009863B8 /* FriendSearchTableViewCell.swift in Sources */,
 				BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */,
+				BD2A35F41D42BF60009863B8 /* ENSideMenu.swift in Sources */,
+				BD07CACC1D414FB500A4FF1C /* SignUpViewController.swift in Sources */,
+				BD2B17EA1D406437002E70FA /* ErrorHandling.swift in Sources */,
+				BD2A35FB1D42D450009863B8 /* ProtoMenuViewController.swift in Sources */,
 				BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */,
 				BDE2EAC31D38901400F5C9E4 /* Helper.swift in Sources */,
+				BD2A35F91D42D0E3009863B8 /* MyNavigationController.swift in Sources */,
+				BD2A35F71D42BFAA009863B8 /* MyMenuTableViewController.swift in Sources */,
+				BD2A35E31D42A245009863B8 /* FriendSearchViewController.swift in Sources */,
 				BDB8A4A91D33FD36003D72B2 /* AppDelegate.swift in Sources */,
 				BDB8A4AB1D33FD36003D72B2 /* MapViewController.swift in Sources */,
 			);
