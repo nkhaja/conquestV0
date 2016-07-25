@@ -9,43 +9,30 @@
 import UIKit
 import Parse
 
-class ProtoMenuViewController: UIViewController {
+class ProtoMenuViewController: UITableViewController {
 
     
-    @IBOutlet weak var tableView: UITableView!
+    //@IBOutlet weak var tableView: UITableView!
     var followedUsers: [PFUser]? = [] {
         didSet {
             /**
              the list of following users may be fetched after the tableView has displayed
              cells. In this case, we reload the data to reflect "following" status
              */
-            tableView.reloadData()
+            //tableView.reloadData()
+            self.tableView.reloadData()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+        tableView.registerClass(ProtoTableViewCell.self, forCellReuseIdentifier: "sideCell")
+        tableView.backgroundColor = UIColor.clearColor()
     
-    
-    
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-    return (followedUsers?.count)!
-    }
-    
-    func cellForRowAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell?{
+        setupTableView()
+//        getFollowingUsers()
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("sideCell", forIndexPath:  indexPath) as! ProtoTableViewCell
-        
-        ParseHelper.getFollowingUsersForUser(PFUser.currentUser()!) {
+        ParseHelper.getInfoForSideMenu(PFUser.currentUser()!) {
             (results: [PFObject]?, error: NSError?) -> Void in
             if let error = error {
                 ErrorHandling.defaultErrorHandler(error)
@@ -56,13 +43,65 @@ class ProtoMenuViewController: UIViewController {
                 $0.objectForKey(ParseHelper.ParseFollowToUser) as! PFUser
             }
         }
-        
-        cell.userLabel.text = followedUsers![indexPath.row]["username"] as? String
 
-        return cell
+        // Do any additional setup after loading the view.
     }
 
-
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setupTableView() {
+        
+        // Customize apperance of table view
+        tableView.contentInset = UIEdgeInsetsMake(64.0, 0, 0, 0)
+        tableView.scrollsToTop = false
+        tableView.separatorStyle = .SingleLine
+        tableView.backgroundColor = UIColor.clearColor()
+        self.clearsSelectionOnViewWillAppear = false
+    }
+    
+//    func getFollowingUsers(){
+//        let followQuery = PFQuery(className: "Follow")
+//        followQuery.whereKey("toUser", equalTo: PFUser.currentUser()!)
+//        
+//        let userQuery = PFQuery(className: "User")
+//        userQuery.whereKey("objectId", matchesKey: "fromUser", inQuery: followQuery)
+//        
+//        userQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
+//            self.followedUsers = result as? [PFUser] ?? []
+//            //completionHandler(followedUsers)
+//        
+//        }
+//    }
+    
+    
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+    return (followedUsers?.count) ?? 0 
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        var cell = tableView.dequeueReusableCellWithIdentifier("sideCell", forIndexPath:  indexPath) as? ProtoTableViewCell
+        
+        if (cell == nil){
+             cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "sideCell") as? ProtoTableViewCell
+        }
+        
+            
+        //.dequeueReusableCellWithIdentifier("sideCell", forIndexPath:  indexPath) as! ProtoTableViewCell
+        
+        
+        cell!.textLabel?.text = followedUsers![indexPath.row]["username"] as? String
+        cell!.textLabel?.textColor = UIColor.greenColor()
+        cell!.backgroundColor = UIColor.clearColor()
+        
+        
+        return cell!
+    }
+    
     /*
     // MARK: - Navigation
 

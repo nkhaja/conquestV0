@@ -69,10 +69,20 @@ class ParseHelper {
      */
     static func getFollowingUsersForUser(user: PFUser, completionBlock: PFQueryArrayResultBlock) {
         let query = PFQuery(className: ParseFollowClass)
-        
         query.whereKey(ParseFollowFromUser, equalTo:user)
+        //query.includeKey("fromUser")
         query.findObjectsInBackgroundWithBlock(completionBlock)
     }
+    
+    
+    static func getInfoForSideMenu(user: PFUser, completionBlock: PFQueryArrayResultBlock) {
+        let query = PFQuery(className: ParseFollowClass)
+        query.whereKey(ParseFollowFromUser, equalTo:user)
+        query.includeKey("toUser")
+        query.findObjectsInBackgroundWithBlock(completionBlock)
+    }
+    
+
     
     /**
      Establishes a follow relationship between two users.
@@ -94,6 +104,8 @@ class ParseHelper {
      :param: user    The user that is following
      :param: toUser  The user that is being followed
      */
+    
+
     static func removeFollowRelationshipFromUser(user: PFUser, toUser: PFUser) {
         let query = PFQuery(className: ParseFollowClass)
         query.whereKey(ParseFollowFromUser, equalTo:user)

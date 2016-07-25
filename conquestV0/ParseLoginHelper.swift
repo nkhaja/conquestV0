@@ -82,7 +82,6 @@ extension ParseLoginHelper : PFLogInViewControllerDelegate {
             }
         }
     }
-    
 }
 
 extension ParseLoginHelper : PFSignUpViewControllerDelegate {
