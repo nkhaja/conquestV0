@@ -8,9 +8,12 @@
 
 import UIKit
 
-class PinTableViewCell: UITableViewCell {
 
+class PinTableViewCell: UITableViewCell{
+
+    @IBOutlet weak var pinImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -12,15 +12,22 @@ class ProtoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var userLabel: UILabel!
     
+    
+    
+    @IBOutlet weak var toggleSwitch: UISwitch!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
+    
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
+    
 
 }

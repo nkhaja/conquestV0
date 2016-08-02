@@ -12,6 +12,8 @@ target 'conquestV0' do
     pod 'ParseFacebookUtilsV4'
     pod 'ParseUI'
     pod 'FBAnnotationClusteringSwift'
+    pod 'KCFloatingActionButton'
+
 
 
 end

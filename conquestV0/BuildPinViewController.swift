@@ -20,13 +20,17 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     let imagePicker = UIImagePickerController()
     var currentUser: PFUser?
     var delegate: BuildPinViewControllerDelegate?
+    var mapViewController: MapViewController?
     
     
+    @IBOutlet weak var dateField: UITextField!
     @IBOutlet weak var titleField: UITextField!
     @IBOutlet weak var locationField: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var pinPhoto: UIImageView!
     @IBOutlet weak var descriptionBox: UITextView!
+    
+    
     @IBAction func setPhotoButton(sender: UIButton) {
         
         imagePicker.allowsEditing = false
@@ -66,15 +70,38 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
+    @IBAction func datePickerTapped(sender: AnyObject) {
+        DatePickerDialog().show("DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) {
+            (date) -> Void in
+            
+    
+            let calendar = NSCalendar.currentCalendar()
+            let components = calendar.components([.Day , .Month , .Year], fromDate: date!)
+            
+            let year =  components.year
+            let month = components.month
+            let day = components.day
+            
+            
+            let dateFormatter: NSDateFormatter = NSDateFormatter()
+            
+            let months = dateFormatter.shortMonthSymbols
+            let monthSymbol = months[month-1] // month - from your date components
+
+ 
+            
+            self.dateField.text = "\(monthSymbol) \(day), \(year)"
+        }
+    }
+    
 
     
     @IBAction func submitPin(sender: UIButton) {
-       
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "pinIsSet" {
-            if let mapViewController = segue.destinationViewController as? MapViewController {
+            if  let mapViewController = segue.destinationViewController as? MapViewController {
               
                 
                 let newPin = Pin(place: (selectedPin?.coordinate)!)
@@ -86,11 +113,11 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
                 
                 let imagedata = UIImageJPEGRepresentation( pinPhoto.image!, 0.8)
                 newPin.imageFile = PFFile(data: imagedata!)
-               
-                addPin(newPin)
                 
-                //mapViewController.pinView?.canShowCallout = false
+                mapViewController.pinView?.canShowCallout = false // May not need this line
                 mapViewController.mapView.removeAnnotations(mapViewController.mapView.annotations)
+                addPin(newPin, controller: mapViewController)
+ 
             }
         }
     }
@@ -119,7 +146,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func addPin(pin:Pin){
+    func addPin(pin:Pin, controller: MapViewController){
         
         let newPin = PFObject(className: "Pin")
         newPin["user"] = pin.user
@@ -134,12 +161,15 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
             (success: Bool, error: NSError?) -> Void in
             if (success) {
                 print("object saved")
-                // update pins in app
-                self.delegate?.updatePins()
-            } else {
+                MapHelper.populatePins(controller.mapView) { (pins) in
+                    controller.pins = pins
+                    controller.clusters = MapHelper.prepareClustering(controller.pins + controller.friendPins)
+                    controller.clusteringManager.setAnnotations(controller.clusters)
+                }
+            }
+            else {
                 print("error")
             }
-            
         }
     }
 }

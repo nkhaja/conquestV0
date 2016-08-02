@@ -21,6 +21,9 @@ class Pin: PFObject, PFSubclassing {
     //@NSManaged var key: String?
     @NSManaged var imageFile: PFFile?
     //@NSManaged var tag: PFObject
+    @NSManaged var id: String
+    
+    var image: UIImage?
     
 
     
@@ -47,7 +50,19 @@ class Pin: PFObject, PFSubclassing {
             self.registerSubclass()
         }
     }
-    
+  
+    func downloadImage() {
+        
+            imageFile?.getDataInBackgroundWithBlock { (data: NSData?, error: NSError?) -> Void in
+                if let error = error {
+                    ErrorHandling.defaultErrorHandler(error)
+                }
+                if let data = data {
+                    let image = UIImage(data: data, scale:1.0)!
+                    self.image = image
+            }
+        }
+    }
 
     
 }

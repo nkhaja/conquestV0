@@ -12,9 +12,6 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="165"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="testPic" translatesAutoresizingMaskIntoConstraints="NO" id="lOM-ej-CDx">
-                    <rect key="frame" x="0.0" y="0.0" width="165" height="165"/>
-                </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE4-aD-ha0">
                     <rect key="frame" x="173" y="8" width="119" height="51"/>
                     <constraints>
@@ -55,9 +52,12 @@
                     <rect key="frame" x="167" y="47" width="46" height="30"/>
                     <state key="normal" title="Button"/>
                     <connections>
-                        <action selector="testButton:" destination="-1" eventType="touchUpInside" id="3F7-7b-Isp"/>
+                        <action selector="testButton:" destination="GrD-A7-8h4" eventType="touchUpInside" id="NEe-i4-LSL"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="testPic" translatesAutoresizingMaskIntoConstraints="NO" id="lOM-ej-CDx">
+                    <rect key="frame" x="0.0" y="0.0" width="165" height="165"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <accessibility key="accessibilityConfiguration" identifier="CustomCalloutView">
@@ -82,7 +82,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="date" destination="mbt-Qq-brx" id="cTp-P8-FN1"/>
-                <outlet property="image" destination="lOM-ej-CDx" id="wa3-Lx-QyN"/>
+                <outlet property="pinImage" destination="lOM-ej-CDx" id="1GK-s3-mTG"/>
                 <outlet property="place" destination="fE4-aD-ha0" id="ePm-Ku-5CS"/>
                 <outlet property="with" destination="Bzz-7M-wX5" id="R02-f6-c6m"/>
             </connections>
