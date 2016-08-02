@@ -20,7 +20,7 @@ protocol HandleMapSearch {
 }
 // UIViewController
 
-class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate {
+class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate, MapRefreshDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -39,6 +39,10 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
         }
         
     }
+    
+    
+    var localPinDict: NSMutableDictionary = [:]
+    var localFriendDict: NSMutableDictionary = [:]
     var localKeys = Set<String>()
     var currentPosition: CLLocation?
     var parseLoginHelper: ParseLoginHelper!
@@ -80,6 +84,7 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
                 }
                 pinViewController.localPins = pins
                 pinViewController.friendPins = friendPins
+                pinViewController.delegate = self
             }
             
         }
@@ -183,6 +188,7 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
         
         friendPins = (friendUsers as? [Pin])!
         addFriendPins(friendPins)
+        localFriendDict = MapHelper.createDict(friendPins)
         print(friendPins)
     }
     
@@ -225,6 +231,8 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
             self.pins = pins
             self.clusters = MapHelper.prepareClustering(pins + self.friendPins)
             self.clusteringManager.setAnnotations(self.clusters)
+            self.localPinDict = MapHelper.createDict(pins)
+
         }
     }
     
@@ -285,6 +293,7 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.friendsPinsNotificatin(_:)), name: "friendsPinNotification", object: nil)
         addFriendPins(friendPins)
+      
         
         
         if (mapView.annotations.count == 0){
@@ -292,6 +301,7 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate 
                 self.pins = pins
                 self.clusters = MapHelper.prepareClustering(pins + self.friendPins)
                 self.clusteringManager.setAnnotations(self.clusters)
+                self.localPinDict = MapHelper.createDict(pins)
             }}
     }
 }
@@ -476,7 +486,16 @@ extension MapViewController : MKMapViewDelegate {
             pinView?.annotation = annotation
         }
         
-        pinView?.image = UIImage(named: "car")
+        
+        let searchKey = MapHelper.makeKey(annotation.coordinate)
+        if(localPinDict[searchKey] == nil){
+            pinView?.image = UIImage(named: "car")
+        }
+        else{
+             pinView?.image = UIImage(named: "first")
+        }
+        
+       //pinView?.image = UIImage(named: "car")
         
         
         let smallSquare = CGSize(width: 30, height: 30)

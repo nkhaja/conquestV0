@@ -67,6 +67,23 @@ class MapHelper{
             mapItem.openInMapsWithLaunchOptions(launchOptions)
         }
     }
+    
+    static func createDict(pins: [Pin]) -> NSMutableDictionary{
+        var newDict: NSMutableDictionary = [:]
+        for p in pins{
+            let latKey = String(p["geoLocation"].latitude)
+            let lonKey = String(p["geoLocation"].longitude)
+            let thisKey = latKey + lonKey
+            newDict[thisKey] = p
+        }
+        return newDict
+    }
+    
+    static func makeKey(coordinate:CLLocationCoordinate2D) -> String {
+        let lat = String (coordinate.latitude)
+        let lon = String (coordinate.longitude)
+        return lat + lon
+    }
   
     
 }

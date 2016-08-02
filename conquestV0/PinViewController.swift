@@ -10,6 +10,11 @@ import UIKit
 import Parse
 import MapKit
 
+protocol MapRefreshDelegate {
+    func refreshMap()
+}
+
+
 class PinViewController: UIViewController {
 
     var localPins: [Pin] = []
@@ -20,6 +25,7 @@ class PinViewController: UIViewController {
     var thisPinIndex:Int?
     var updatedPin: Pin?
     var owner:Bool?
+    var delegate: MapRefreshDelegate? = nil
  
     
 
@@ -36,9 +42,8 @@ class PinViewController: UIViewController {
     override func viewWillDisappear(animated : Bool) {
         super.viewWillDisappear(animated)
         
-        if (self.isMovingFromParentViewController()){
-            
-        
+        if (self.isMovingFromParentViewController() && delegate != nil ){
+            delegate!.refreshMap()
         }
     }
     
@@ -119,6 +124,7 @@ class PinViewController: UIViewController {
             self.thisPinIndex = self.localPins.indexOf(self.thisPin!)
             self.localPins.removeAtIndex(self.thisPinIndex!)
             tableView.reloadData()
+
             }
         }
         

@@ -152,6 +152,7 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
         locationText.text = thisPin?.placeName
         descriptionBox.text = thisPin?.description
         self.pinImage.image = imageHolder
+        imagePicker.delegate = self
     }
 
     override func didReceiveMemoryWarning() {

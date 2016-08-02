@@ -50,6 +50,12 @@ class Pin: PFObject, PFSubclassing {
             self.registerSubclass()
         }
     }
+    
+    func changeCoordType() -> CLLocationCoordinate2D{
+        let lat = geoPoint?.latitude
+        let lon = geoPoint?.longitude
+        return CLLocationCoordinate2D(latitude: lat!, longitude: lon!)
+    }
   
     func downloadImage() {
         
