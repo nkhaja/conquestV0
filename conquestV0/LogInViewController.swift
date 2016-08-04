@@ -26,7 +26,7 @@ class LogInViewController : PFLogInViewController {
         let user = PFUser.currentUser()
         if(user != nil){
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-           let controller = storyboard.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
+           let controller = storyboard.instantiateViewControllerWithIdentifier("first") as! UINavigationController
             
             let top = UIApplication.sharedApplication().keyWindow?.rootViewController
             top?.presentViewController(controller, animated: true, completion: nil)

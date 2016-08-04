@@ -33,9 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // if login was successful, display the TabBarController
                 // 2
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let tabBarController = storyboard.instantiateViewControllerWithIdentifier("TabBarController")
+                let startController = storyboard.instantiateViewControllerWithIdentifier("first")
                 // 3
-                self.window?.rootViewController!.presentViewController(tabBarController, animated:true, completion:nil)
+                self.window?.rootViewController!.presentViewController(startController, animated:true, completion:nil)
             }
         }
     }
@@ -87,7 +87,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
         
         // make white the default color for selected tab bar entries
-        UITabBar.appearance().tintColor = UIColor.blueColor()
+        //UITabBar.appearance().tintColor = MapHelper.hexStringToUIColor("#bbeaf4")
+        
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }

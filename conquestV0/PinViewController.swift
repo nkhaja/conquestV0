@@ -15,6 +15,7 @@ protocol MapRefreshDelegate {
 }
 
 
+
 class PinViewController: UIViewController {
 
     var localPins: [Pin] = []

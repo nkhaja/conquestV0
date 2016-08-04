@@ -20,7 +20,7 @@ protocol HandleMapSearch {
 }
 // UIViewController
 
-class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate, MapRefreshDelegate {
+class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -77,11 +77,6 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
             
         else if segue.identifier == "pinList" {
             if let pinViewController = segue.destinationViewController as? PinViewController{
-                for p in pins {
-                    if (p.image == nil){
-                        p.downloadImage()
-                    }
-                }
                 pinViewController.localPins = pins
                 pinViewController.friendPins = friendPins
                 pinViewController.delegate = self
@@ -135,42 +130,55 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
     
     func setupForFloatingButton(){
         let fabManager = KCFABManager.defaultInstance()
-        let fab = KCFloatingActionButton()
+        let fabRight = KCFloatingActionButton()
+        let fabRightImage = UIImage(named: "settings-2")
+        fabRight.openAnimationType = .SlideUp
+    
+        fabRight.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fabRightImage?.drawInRect(CGRect(x: 15, y: 15, width: 15, height: 15))
+       
         
         
-        fab.size = 30
-        fab.paddingY = 100
-        fab.addItem("Find me", icon: UIImage(named: "car")!, handler: { item in
+        fabRight.buttonImage = fabRightImage //UIImage(named: "settings")
+ 
+        fabRight.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
+       
+    
+        
+        fabRight.size = 30
+
+        fabRight.paddingY = 25
+        fabRight.addItem("Find Me", icon: UIImage(named: "weapon-crosshair")!, handler: { item in
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegion(center: self.currentPosition!.coordinate, span: span)
             self.mapView.setRegion(region, animated: true)
-            fab.close()
+            fabRight.close()
         })
         
-        fab.addItem("Pin Table", icon: UIImage(named: "car")!, handler: { item in
+        fabRight.addItem("My Pins", icon: UIImage(named: "placeholder")!, handler: { item in
             self.performSegueWithIdentifier("pinList", sender: self)
-            fab.close()
+            fabRight.close()
         })
         
         
-        fab.addItem("Show friend's pins", icon: UIImage(named: "car")!, handler: { item in
+        fabRight.addItem("Friends", icon: UIImage(named: "symbol")!, handler: { item in
             self.toggleSideMenuView()
-            fab.close()
+            fabRight.close()
         })
         
         
-        fab.addItem("Log out", icon: UIImage(named: "car")!, handler: { item in
+        fabRight.addItem("Log out", icon: UIImage(named: "man-and-opened-exit-door")!, handler: { item in
             PFUser.logOut()
             self.dismissViewControllerAnimated(true, completion: nil)
-            fab.close()
+            fabRight.close()
         })
         
-        fab.addItem("Refresh Map", icon: UIImage(named: "car")!, handler: { item in
+        fabRight.addItem("Refresh", icon: UIImage(named: "refresh-button")!, handler: { item in
             self.refreshMap()
-            fab.close()
+            fabRight.close()
         })
         
-        self.view.addSubview(fab)
+        self.view.addSubview(fabRight)
     }
     
     
@@ -229,6 +237,9 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
         self.mapView.removeAnnotations(allAnnotations)
         MapHelper.populatePins(self.mapView) { (pins) in
             self.pins = pins
+            for p in pins {
+                if (p.image == nil){
+                    p.downloadImage()}}
             self.clusters = MapHelper.prepareClustering(pins + self.friendPins)
             self.clusteringManager.setAnnotations(self.clusters)
             self.localPinDict = MapHelper.createDict(pins)
@@ -246,7 +257,8 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.mapView.mapType = .Standard
+        self.mapView.delegate!.mapView!(self.mapView, regionDidChangeAnimated: true)
         //SETUP LOCAL VARIABLES
         setUser()
         setupForFloatingButton()
@@ -275,6 +287,7 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
         let searchBar = resultSearchController!.searchBar
         searchBar.sizeToFit()
         searchBar.placeholder = "Search for places"
+        //searchBar.backgroundColor = MapHelper.hexStringToUIColor("#00a774")
         navigationItem.titleView = resultSearchController?.searchBar
         
         resultSearchController?.hidesNavigationBarDuringPresentation = false
@@ -302,6 +315,11 @@ class MapViewController: UIViewController, UITabBarDelegate, ENSideMenuDelegate,
                 self.clusters = MapHelper.prepareClustering(pins + self.friendPins)
                 self.clusteringManager.setAnnotations(self.clusters)
                 self.localPinDict = MapHelper.createDict(pins)
+                for p in pins {
+                    if (p.image == nil){
+                        p.downloadImage()
+                    }
+                }
             }}
     }
 }
@@ -450,7 +468,6 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
         
-        
         var reuseId = ""
         if annotation is MKUserLocation {
             //return nil so map view draws "blue dot" for standard user location
@@ -468,7 +485,7 @@ extension MapViewController : MKMapViewDelegate {
             
             button.addTarget(self, action: #selector(MapViewController.customizePin), forControlEvents: .TouchUpInside)
             clusterView?.leftCalloutAccessoryView = button
-            clusterView?.canShowCallout = true
+            clusterView?.canShowCallout = false
             
             return clusterView
         }
@@ -536,7 +553,7 @@ extension MapViewController : MKMapViewDelegate {
             }
         }
 
-
+    
         return pinView
     }
     
@@ -598,7 +615,7 @@ extension MapViewController : MKMapViewDelegate {
             calloutView.pinImage.image = currentPin?.image
             
             
-            let span = MKCoordinateSpanMake(0.05, 0.05)
+            let span = MKCoordinateSpanMake(0.01, 0.01)
             let region = MKCoordinateRegion(center: (view.annotation?.coordinate)!, span: span)
             mapView.setRegion(region, animated: true)
             
@@ -622,20 +639,17 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool){
         NSOperationQueue().addOperationWithBlock({
-            if(self.mapView.annotations.count < 2){
-                return
-            }
         
             let mapBoundsWidth = Double(self.mapView.bounds.size.width)
             let mapRectWidth:Double = self.mapView.visibleMapRect.size.width
             let scale:Double = mapBoundsWidth / mapRectWidth
+            print(mapView.annotations.count)
             let annotationArray = self.clusteringManager.clusteredAnnotationsWithinMapRect(self.mapView.visibleMapRect, withZoomScale:scale)
             self.clusteringManager.displayAnnotations(annotationArray, onMapView: self.mapView)
 
+        
         })
     }
-    
-    
 }
 
 extension MapViewController: ProtoMenuViewControllerDelegate {

@@ -6,6 +6,12 @@
 //  Copyright © 2016 Nabil. All rights reserved.
 //
 
+@ objc protocol FriendManagementDelegate{
+    optional func manageFriendPins()
+    optional func updateSideMenu()
+    optional func updateFriendSection()
+}
+
 import UIKit
 import Parse
 
@@ -13,6 +19,10 @@ class FriendSearchViewController: UIViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    
+    
+    var sideMenuFriendListDelegate: FriendManagementDelegate? = nil
+    var pinViewTableViewControllerDelegate: FriendManagementDelegate?
     
     // stores all the users that match the current search query
     var users: [PFUser]?
@@ -121,7 +131,6 @@ extension FriendSearchViewController: UITableViewDataSource {
         }
         
         cell.delegate = self
-        
         return cell
     }
 }

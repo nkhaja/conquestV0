@@ -13,6 +13,7 @@ target 'conquestV0' do
     pod 'ParseUI'
     pod 'FBAnnotationClusteringSwift'
     pod 'KCFloatingActionButton'
+    pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift2'
 
 
 

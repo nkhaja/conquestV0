@@ -23,7 +23,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     var mapViewController: MapViewController?
     
     
-    @IBOutlet weak var dateField: UITextField!
+    @IBOutlet weak var dateLabel: UITextField!
     @IBOutlet weak var titleField: UITextField!
     @IBOutlet weak var locationField: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
@@ -90,7 +90,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
 
  
             
-            self.dateField.text = "\(monthSymbol) \(day), \(year)"
+            self.dateLabel.text = "\(monthSymbol) \(day), \(year)"
         }
     }
     
