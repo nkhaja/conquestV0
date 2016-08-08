@@ -153,9 +153,7 @@ public class FBClusteringManager : NSObject {
             }
             if let removeAnnotations = toRemove.allObjects as? [MKAnnotation]{
                 mapView.removeAnnotations(removeAnnotations)
-                print("remove annotations: \(mapView.annotations.count)")
             }
-            print("display annotations: \(mapView.annotations.count)")
         }
         
     }

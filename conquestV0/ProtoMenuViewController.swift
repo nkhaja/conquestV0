@@ -14,9 +14,9 @@ protocol ProtoMenuViewControllerDelegate {
     func makeFriendPins(friendPins: [Pin])
 }
 
-class ProtoMenuViewController: UIViewController {
+class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
     
-//    var delegate: ProtoMenuViewControllerDelegate?
+    
     
     @IBOutlet weak var tableView: UITableView!
     weak var mapViewController: MapViewController!
@@ -27,6 +27,11 @@ class ProtoMenuViewController: UIViewController {
         }
     }
 
+    
+    
+    
+    var states: [String:Bool] = [:]
+    
     var followedUsers: [PFUser]? = [] {
         didSet {
             /**
@@ -43,21 +48,31 @@ class ProtoMenuViewController: UIViewController {
         }
     }
     
-    var pinsOfFollowedUsers: [Pin] = [] {
+    var pinsOfFollowedUsers: [Pin]? {
         didSet{
     
         }
     
     }
     
+    func saveState(state: Bool, indexPath: NSIndexPath) {
+        states[String(indexPath)] = state
+    }
+    
+    func queryForUserAtRow(indexPath: NSIndexPath){
+        //let cell = tableView.cellForRowAtIndexPath(indexPath)
+        let followQuery = PFQuery(className: "Pin")
+        let thisUser = followedUsers![indexPath.row] as PFUser
+        followQuery.whereKey("user", equalTo: thisUser)
+        queries.append(followQuery)
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        tableView.registerClass(ProtoTableViewCell.self, forCellReuseIdentifier: "sideCell")
+
         self.tableView.backgroundColor = UIColor.clearColor()
-        
-        
-        
         setupTableView()
         
         ParseHelper.getInfoForSideMenu(PFUser.currentUser()!) {
@@ -80,6 +95,9 @@ class ProtoMenuViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillAppear(animated: Bool) {
+        tableView.reloadData()
+    }
     
 
 
@@ -91,22 +109,17 @@ class ProtoMenuViewController: UIViewController {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("sideCell", forIndexPath:  indexPath) as! ProtoTableViewCell
-        //cell.toggleSwitch.setOn(false, animated: false)
-        
- 
+        cell.delegate = self
+        cell.indexPath = indexPath
         cell.userLabel.text = followedUsers![indexPath.row]["username"] as? String
         cell.backgroundColor = UIColor.clearColor()
         
-        if cell.toggleSwitch.on {
-            let pinQuery = PFQuery(className: "Pin")
-            let thisUser = followedUsers![indexPath.row] as PFUser
-            
-
-
-            pinQuery.whereKey("user", equalTo: thisUser)
-            queries.append(pinQuery)
+        if(self.states[String(indexPath)] == nil){
+            self.states[String(indexPath)] = cell.toggleSwitch.on
         }
         
+        cell.state = self.states[String(indexPath)]!
+        cell.reloadInputViews()
         
         return cell
     }
@@ -121,31 +134,36 @@ class ProtoMenuViewController: UIViewController {
         //self.clearsSelectionOnViewWillAppear = false
     }
     
-    func getPinsOfSelectedUsers() {
+    func getPinsOfSelectedUsers(callBack: ([Pin]) -> Void) {
         
         if( queries.count > 0){
             let combinedQuery = PFQuery.orQueryWithSubqueries(queries)
             combinedQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
-                //            self.retrievedPins = result as? [Pin] ?? []
-                if let result = result {
-                    NSNotificationCenter.defaultCenter().postNotificationName("friendsPinNotification", object: self, userInfo: ["pin":result])
-                    // ADD DELEGATE CALL FOR VIEW WILL APPEAR HERE
+                if let result = result as? [Pin] {
+                    print("I need to get here")
+                    callBack(result)
                 }
             }
         }
         
         else{
-            NSNotificationCenter.defaultCenter().postNotificationName("friendsPinNotification", object: self, userInfo: nil)
+            callBack([])
         }
+        
        queries.removeAll()  
     }
     
     @IBAction func setFriendPinsButton(sender: AnyObject) {
-        self.tableView.reloadData()
-        getPinsOfSelectedUsers()
-       
+}
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "exitFromProtoToMap"{
+            getPinsOfSelectedUsers() { (pins) in
+                self.pinsOfFollowedUsers = pins
+                self.performSegueWithIdentifier("exitFromProtoToMap", sender: self)
+                if let mapViewController = segue.destinationViewController as? MapViewController{
+                    mapViewController.friendPins = self.pinsOfFollowedUsers!
+                }
+            }
+        }
     }
-    
-
-    
 }

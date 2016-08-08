@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import Parse
+import Spring
 
 protocol BuildPinViewControllerDelegate {
     func updatePins()
@@ -20,17 +21,18 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     let imagePicker = UIImagePickerController()
     var currentUser: PFUser?
     var delegate: BuildPinViewControllerDelegate?
-    var mapViewController: MapViewController?
+    var annotationId: String? = nil
     
+
     
-    @IBOutlet weak var dateLabel: UITextField!
-    @IBOutlet weak var titleField: UITextField!
-    @IBOutlet weak var locationField: UITextField!
-    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var titleField: DesignableTextField!
+    @IBOutlet weak var locationField: DesignableTextField!
+    @IBOutlet weak var dateLabel: DesignableLabel!
     @IBOutlet weak var pinPhoto: UIImageView!
-    @IBOutlet weak var descriptionBox: UITextView!
+    @IBOutlet weak var descriptionBox: DesignableTextView!
+
     
-    
+
     @IBAction func setPhotoButton(sender: UIButton) {
         
         imagePicker.allowsEditing = false
@@ -74,7 +76,8 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         DatePickerDialog().show("DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) {
             (date) -> Void in
             
-    
+            if(date != nil){
+            
             let calendar = NSCalendar.currentCalendar()
             let components = calendar.components([.Day , .Month , .Year], fromDate: date!)
             
@@ -82,22 +85,21 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
             let month = components.month
             let day = components.day
             
-            
             let dateFormatter: NSDateFormatter = NSDateFormatter()
-            
             let months = dateFormatter.shortMonthSymbols
             let monthSymbol = months[month-1] // month - from your date components
-
- 
             
-            self.dateLabel.text = "\(monthSymbol) \(day), \(year)"
+            
+           
+            self.dateLabel.text = "\(monthSymbol) \(day), \(year)"}
         }
     }
     
 
     
-    @IBAction func submitPin(sender: UIButton) {
+    @IBAction func submitPin(sender: DesignableButton) {
     }
+
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "pinIsSet" {
@@ -108,8 +110,10 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
                 
                 newPin.title = titleField.text
                 newPin.placeName = locationField.text
-                //newPin.date = datePicker.date
+                newPin.date = dateLabel.text
                 newPin.details = descriptionBox.text
+                if (self.annotationId != nil){
+                    newPin.annotationId = self.annotationId!}
                 
                 let imagedata = UIImageJPEGRepresentation( pinPhoto.image!, 0.8)
                 newPin.imageFile = PFFile(data: imagedata!)
@@ -117,9 +121,16 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
                 mapViewController.pinView?.canShowCallout = false // May not need this line
                 mapViewController.mapView.removeAnnotations(mapViewController.mapView.annotations)
                 addPin(newPin, controller: mapViewController)
- 
             }
         }
+        
+    }
+    
+    
+
+    
+    
+    @IBAction func unWindFromAnnotationCollection(sender: UIStoryboardSegue){
     }
     
     
@@ -146,8 +157,11 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+
+    
     func addPin(pin:Pin, controller: MapViewController){
-        
+    
+    
         let newPin = PFObject(className: "Pin")
         newPin["user"] = pin.user
         newPin["title"] = pin.title
@@ -155,7 +169,10 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         newPin["geoLocation"] = pin.geoPoint
         newPin["imageFile"] = pin.imageFile
         newPin["details"] = pin.details
-        //newPin["date"] = pin.date
+        newPin["date"] = pin.date
+        newPin["annotationId"] = self.annotationId
+        newPin["ownerName"] = PFUser.currentUser()?.username
+//        newPin.saveInBackground()
         
         newPin.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in

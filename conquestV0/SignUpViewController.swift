@@ -21,7 +21,7 @@ class SignUpViewController : PFSignUpViewController {
         super.viewDidLoad()
         
         // set our custom background image
-        backgroundImage = UIImageView(image: UIImage(named: "testPic"))
+        backgroundImage = UIImageView(image: UIImage(named: "citySky"))
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         signUpView!.insertSubview(backgroundImage, atIndex: 0)
         

@@ -9,32 +9,30 @@
 import UIKit
 import MapKit
 import Parse
+import Spring
+
+protocol CustomCalloutDelegate {
+    func showDetails(detailPin:Pin)
+}
+
 class CustomCalloutView: MKAnnotationView {
     
     var owner:Bool = false
     var location: PFGeoPoint?
     var id: String?
+    var delegate: CustomCalloutDelegate?
+    var thisPin: Pin?
     
+    
+    
+
     @IBOutlet weak var pinImage: UIImageView!
+    @IBOutlet weak var dateLabel: DesignableLabel!
     
-    @IBOutlet weak var place: UILabel!
-    @IBOutlet weak var date: UILabel!
-    @IBOutlet weak var with: UILabel!
-    
-    
-    @IBAction func testButton(sender: AnyObject) {
- 
-//        else {
-//            let message = "You don't own this pin! \n remove this pin using options menu"
-//            let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertControllerStyle.Alert)
-//            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
-//            //self.presentViewController(alert, animated: true, completion: nil)
-//        }
-   
-        
-      
-        superview?.removeFromSuperview().self
-        print("button tapped")
+
+    @IBAction func calloutButton(sender: AnyObject) {
+        self.delegate!.showDetails(thisPin!)
+
     }
     
     

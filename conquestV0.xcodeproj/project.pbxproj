@@ -12,14 +12,12 @@
 		BD07CACC1D414FB500A4FF1C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */; };
 		BD0887921D4AB46C007259B7 /* PictureFrameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0887911D4AB46C007259B7 /* PictureFrameViewController.swift */; };
 		BD0887981D4AC5A3007259B7 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0887971D4AC5A3007259B7 /* DetailViewController.swift */; };
+		BD1373801D57080400124EBC /* AnnotationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD13737F1D57080400124EBC /* AnnotationCollectionViewController.swift */; };
+		BD1373861D57A38F00124EBC /* AnnotationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1373851D57A38F00124EBC /* AnnotationCollectionViewCell.swift */; };
 		BD2A35E11D419833009863B8 /* MapHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E01D419833009863B8 /* MapHelper.swift */; };
 		BD2A35E31D42A245009863B8 /* FriendSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */; };
 		BD2A35E61D42A2F1009863B8 /* FriendSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */; };
 		BD2A35E81D42A351009863B8 /* ParseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35E71D42A351009863B8 /* ParseHelper.swift */; };
-		BD2A35F41D42BF60009863B8 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */; };
-		BD2A35F51D42BF60009863B8 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */; };
-		BD2A35F71D42BFAA009863B8 /* MyMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */; };
-		BD2A35F91D42D0E3009863B8 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */; };
 		BD2A35FB1D42D450009863B8 /* ProtoMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */; };
 		BD2A35FD1D42D6A2009863B8 /* ProtoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */; };
 		BD2A36031D46CC90009863B8 /* DatePickerDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2A36021D46CC90009863B8 /* DatePickerDialog.swift */; };
@@ -38,7 +36,6 @@
 		BDB8A4CE1D35B376003D72B2 /* CustomCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */; };
 		BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */; };
 		BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */; };
-		BDB8A4D71D3845F5003D72B2 /* CustomCalloutAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */; };
 		BDE2EAC31D38901400F5C9E4 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE2EAC21D38901400F5C9E4 /* Helper.swift */; };
 		BDE2EAC71D398E6700F5C9E4 /* PinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -51,14 +48,12 @@
 		BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		BD0887911D4AB46C007259B7 /* PictureFrameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PictureFrameViewController.swift; sourceTree = "<group>"; };
 		BD0887971D4AC5A3007259B7 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		BD13737F1D57080400124EBC /* AnnotationCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationCollectionViewController.swift; sourceTree = "<group>"; };
+		BD1373851D57A38F00124EBC /* AnnotationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationCollectionViewCell.swift; sourceTree = "<group>"; };
 		BD2A35E01D419833009863B8 /* MapHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapHelper.swift; sourceTree = "<group>"; };
 		BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSearchViewController.swift; sourceTree = "<group>"; };
 		BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSearchTableViewCell.swift; sourceTree = "<group>"; };
 		BD2A35E71D42A351009863B8 /* ParseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseHelper.swift; sourceTree = "<group>"; };
-		BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ENSideMenu.swift; path = "../../../ENSwiftSideMenu-master/Library/ENSideMenu.swift"; sourceTree = "<group>"; };
-		BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ENSideMenuNavigationController.swift; path = "../../../ENSwiftSideMenu-master/Library/ENSideMenuNavigationController.swift"; sourceTree = "<group>"; };
-		BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyMenuTableViewController.swift; path = "../../../ENSwiftSideMenu-master/Example/SwiftSideMenu/MyMenuTableViewController.swift"; sourceTree = "<group>"; };
-		BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyNavigationController.swift; path = "../../../ENSwiftSideMenu-master/Example/SwiftSideMenu/MyNavigationController.swift"; sourceTree = "<group>"; };
 		BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoMenuViewController.swift; sourceTree = "<group>"; };
 		BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtoTableViewCell.swift; path = conquestV0/ProtoTableViewCell.swift; sourceTree = "<group>"; };
 		BD2A36021D46CC90009863B8 /* DatePickerDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDialog.swift; sourceTree = "<group>"; };
@@ -79,7 +74,6 @@
 		BDB8A4CD1D35B376003D72B2 /* CustomCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCalloutView.xib; sourceTree = "<group>"; };
 		BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutView.swift; sourceTree = "<group>"; };
 		BDB8A4D11D36C23C003D72B2 /* BuildPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildPinViewController.swift; sourceTree = "<group>"; };
-		BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalloutAccessory.swift; sourceTree = "<group>"; };
 		BDE2EAC21D38901400F5C9E4 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTableViewCell.swift; path = conquestV0/PinTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,27 +113,15 @@
 				BDE2EAC61D398E6700F5C9E4 /* PinTableViewCell.swift */,
 				BD2A35E51D42A2F1009863B8 /* FriendSearchTableViewCell.swift */,
 				BD2A35FC1D42D6A2009863B8 /* ProtoTableViewCell.swift */,
+				BD1373851D57A38F00124EBC /* AnnotationCollectionViewCell.swift */,
 			);
 			name = Views;
 			path = ..;
 			sourceTree = "<group>";
 		};
-		BD2A35E91D42B96F009863B8 /* Sidebar */ = {
-			isa = PBXGroup;
-			children = (
-				BD2A35F21D42BF60009863B8 /* ENSideMenu.swift */,
-				BD2A35F31D42BF60009863B8 /* ENSideMenuNavigationController.swift */,
-				BD2A35F61D42BFAA009863B8 /* MyMenuTableViewController.swift */,
-				BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */,
-				BD2A35F81D42D0E3009863B8 /* MyNavigationController.swift */,
-			);
-			name = Sidebar;
-			sourceTree = "<group>";
-		};
 		BD2A36001D46CC54009863B8 /* Third Party  */ = {
 			isa = PBXGroup;
 			children = (
-				BD2A35E91D42B96F009863B8 /* Sidebar */,
 				BD2A36011D46CC68009863B8 /* DatePicker */,
 			);
 			name = "Third Party ";
@@ -206,7 +188,6 @@
 				BDE2EAC21D38901400F5C9E4 /* Helper.swift */,
 				BDB8A4C11D3569A6003D72B2 /* Pin.swift */,
 				BDAC65701D3FEF0A002515D2 /* CustomPin.swift */,
-				BDB8A4D61D3845F5003D72B2 /* CustomCalloutAccessory.swift */,
 				BDB8A4CF1D36A9F8003D72B2 /* CustomCalloutView.swift */,
 			);
 			name = Objects;
@@ -217,6 +198,7 @@
 			children = (
 				BDB8A4AA1D33FD36003D72B2 /* MapViewController.swift */,
 				BD0887911D4AB46C007259B7 /* PictureFrameViewController.swift */,
+				BD2A35FA1D42D450009863B8 /* ProtoMenuViewController.swift */,
 				BDB8A4BF1D343623003D72B2 /* LocationSearchTable.swift */,
 				BD0887971D4AC5A3007259B7 /* DetailViewController.swift */,
 				BDB8A4AC1D33FD36003D72B2 /* PinViewController.swift */,
@@ -225,6 +207,7 @@
 				BD07CACB1D414FB500A4FF1C /* SignUpViewController.swift */,
 				BD2A35E21D42A245009863B8 /* FriendSearchViewController.swift */,
 				BD853BF61D4ECF240027F14F /* EditPinViewController.swift */,
+				BD13737F1D57080400124EBC /* AnnotationCollectionViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -355,9 +338,8 @@
 				BD07CACA1D414ED200A4FF1C /* LogInViewController.swift in Sources */,
 				BDB8A4C01D343623003D72B2 /* LocationSearchTable.swift in Sources */,
 				BD2B17E81D4062A5002E70FA /* ParseLoginHelper.swift in Sources */,
-				BD2A35F51D42BF60009863B8 /* ENSideMenuNavigationController.swift in Sources */,
-				BDB8A4D71D3845F5003D72B2 /* CustomCalloutAccessory.swift in Sources */,
 				BDE2EAC71D398E6700F5C9E4 /* PinTableViewCell.swift in Sources */,
+				BD1373801D57080400124EBC /* AnnotationCollectionViewController.swift in Sources */,
 				BD2A35E81D42A351009863B8 /* ParseHelper.swift in Sources */,
 				BDB8A4AD1D33FD36003D72B2 /* PinViewController.swift in Sources */,
 				BDAC65711D3FEF0A002515D2 /* CustomPin.swift in Sources */,
@@ -367,17 +349,15 @@
 				BDB8A4D01D36A9F8003D72B2 /* CustomCalloutView.swift in Sources */,
 				BD2A35E61D42A2F1009863B8 /* FriendSearchTableViewCell.swift in Sources */,
 				BDB8A4C21D3569A6003D72B2 /* Pin.swift in Sources */,
-				BD2A35F41D42BF60009863B8 /* ENSideMenu.swift in Sources */,
 				BD07CACC1D414FB500A4FF1C /* SignUpViewController.swift in Sources */,
+				BD1373861D57A38F00124EBC /* AnnotationCollectionViewCell.swift in Sources */,
 				BD0887921D4AB46C007259B7 /* PictureFrameViewController.swift in Sources */,
 				BD2B17EA1D406437002E70FA /* ErrorHandling.swift in Sources */,
 				BD2A35FB1D42D450009863B8 /* ProtoMenuViewController.swift in Sources */,
 				BDB8A4D21D36C23C003D72B2 /* BuildPinViewController.swift in Sources */,
 				BDE2EAC31D38901400F5C9E4 /* Helper.swift in Sources */,
-				BD2A35F91D42D0E3009863B8 /* MyNavigationController.swift in Sources */,
 				BD853BF71D4ECF240027F14F /* EditPinViewController.swift in Sources */,
 				BD2A36031D46CC90009863B8 /* DatePickerDialog.swift in Sources */,
-				BD2A35F71D42BFAA009863B8 /* MyMenuTableViewController.swift in Sources */,
 				BD2A35E31D42A245009863B8 /* FriendSearchViewController.swift in Sources */,
 				BDB8A4A91D33FD36003D72B2 /* AppDelegate.swift in Sources */,
 				BDB8A4AB1D33FD36003D72B2 /* MapViewController.swift in Sources */,

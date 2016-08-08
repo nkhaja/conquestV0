@@ -14,7 +14,6 @@ import FBAnnotationClusteringSwift
 class MapHelper{
     
     static func populatePins(mapView: MKMapView, callBack: ([Pin]) -> Void ) {
-        mapView.removeAnnotations(mapView.annotations)
         let pinQuery = PFQuery(className: "Pin")
         pinQuery.whereKey("user", equalTo: PFUser.currentUser()!)
         pinQuery.includeKey("user")
@@ -27,10 +26,17 @@ class MapHelper{
                 mapView.reloadInputViews()
             }
             
-            print("closure is finished")
             callBack(retrievedPins)
         }
+    }
     
+    static func populateFriendPins(mapView: MKMapView, friendPins: [Pin]){
+        for p in friendPins {
+            let newPin = MKPointAnnotation()
+            newPin.coordinate = CLLocationCoordinate2D(latitude: p["geoLocation"].latitude, longitude: p["geoLocation"].longitude)
+            mapView.addAnnotation(newPin)
+            mapView.reloadInputViews()
+        }
     }
     
     
@@ -68,8 +74,8 @@ class MapHelper{
         }
     }
     
-    static func createDict(pins: [Pin]) -> NSMutableDictionary{
-        var newDict: NSMutableDictionary = [:]
+    static func createDict(pins: [Pin]) -> [String:Pin]{
+        var newDict: [String:Pin] = [:]
         for p in pins{
             let latKey = String(p["geoLocation"].latitude)
             let lonKey = String(p["geoLocation"].longitude)
@@ -105,6 +111,23 @@ class MapHelper{
             blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
             alpha: CGFloat(1.0)
         )
+    }
+    
+    static func nameKeyDict(pins: [Pin]) -> [String:[Pin]]{
+        var newDict: [String:[Pin]] = [:]
+        for p in pins{
+            var arrayForUser: [Pin] = []
+            let name = p.ownerName!
+            if newDict[name] == nil{
+                arrayForUser.append(p)
+                newDict[name] = arrayForUser
+            }
+            
+            else {
+                newDict[name]?.append(p)
+            }
+        }
+        return newDict
     }
   
     

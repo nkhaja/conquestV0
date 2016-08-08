@@ -7,14 +7,18 @@
 //
 
 import UIKit
+import Spring
 
 
 class PinTableViewCell: UITableViewCell{
 
-    @IBOutlet weak var pinImage: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var dateLabel: UILabel!
     
+    @IBOutlet weak var pinImage: DesignableImageView!
+    @IBOutlet weak var titleLabel: DesignableLabel!
+    @IBOutlet weak var locationLabel: DesignableLabel!
+    @IBOutlet weak var dateLabel: DesignableLabel!
+    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

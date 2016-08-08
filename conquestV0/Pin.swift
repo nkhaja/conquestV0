@@ -16,12 +16,11 @@ class Pin: PFObject, PFSubclassing {
     @NSManaged var title: String?
     @NSManaged var placeName: String?
     @NSManaged var geoPoint: PFGeoPoint?
-    @NSManaged var date: NSDate?
+    @NSManaged var date: String?
     @NSManaged var details: String?
-    //@NSManaged var key: String?
     @NSManaged var imageFile: PFFile?
-    //@NSManaged var tag: PFObject
-    @NSManaged var id: String
+    @NSManaged var annotationId: String
+    @NSManaged var ownerName: String?
     
     var image: UIImage?
     

@@ -40,13 +40,13 @@ class LogInViewController : PFLogInViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // set our custom background image
-        backgroundImage = UIImageView(image: UIImage(named: "testPic"))
+        backgroundImage = UIImageView(image: UIImage(named: "citySky"))
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         logInView!.insertSubview(backgroundImage, atIndex: 0)
         
         // remove the parse Logo
         let logo = UILabel()
-        logo.text = "Memory Map"
+        logo.text = "Vay.K"
         logo.textColor = UIColor.whiteColor()
         logo.font = UIFont(name: "Pacifico", size: 70)
         logo.shadowColor = UIColor.lightGrayColor()
@@ -55,6 +55,8 @@ class LogInViewController : PFLogInViewController {
         
         // set forgotten password button to white
         logInView?.passwordForgottenButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        logInView?.passwordForgottenButton?.layer.backgroundColor = MapHelper.hexStringToUIColor("b5b5b5").colorWithAlphaComponent(0.6).CGColor
+
         
         // make the background of the login button pop more
         logInView?.logInButton?.setBackgroundImage(nil, forState: .Normal)
@@ -79,6 +81,7 @@ class LogInViewController : PFLogInViewController {
         button.layer.cornerRadius = 5
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.whiteColor().CGColor
+        button.layer.backgroundColor = MapHelper.hexStringToUIColor("b5b5b5").colorWithAlphaComponent(0.6).CGColor
     }
     
     override func viewDidLayoutSubviews() {

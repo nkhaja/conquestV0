@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Spring
 
 class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
 
@@ -22,9 +23,9 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var pinImage: UIImageView!
     
     @IBOutlet weak var titleText: UITextField!
-    @IBOutlet weak var dateText: UITextField!
+    @IBOutlet weak var dateText: DesignableLabel!
     @IBOutlet weak var locationText: UITextField!
-    @IBOutlet weak var descriptionBox: UITextView!
+    @IBOutlet weak var descriptionBox: DesignableTextView!
     
 
     @IBAction func selectImageButton(sender: UIButton) {

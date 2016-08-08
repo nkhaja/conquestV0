@@ -18,9 +18,11 @@ import KCFloatingActionButton
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark)
 }
+
+
 // UIViewController
 
-class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegate {
+class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -40,9 +42,11 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
         
     }
     
+   
     
-    var localPinDict: NSMutableDictionary = [:]
-    var localFriendDict: NSMutableDictionary = [:]
+    
+    var localPinDict: [String:Pin] = [:]
+    var localFriendDict: [String:Pin] = [:]
     var localKeys = Set<String>()
     var currentPosition: CLLocation?
     var parseLoginHelper: ParseLoginHelper!
@@ -53,12 +57,12 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
     var currentUser: PFUser?
     var keyForSearchAnnotation: String?
     var pinView: MKAnnotationView? //change
-    
     var clusters:[FBAnnotation] = []
     weak var buildPinViewController: BuildPinViewController!
     weak var protoMenuViewController: ProtoMenuViewController!
-    
     var zoomToLocation: CLLocationCoordinate2D?
+    var usersBeingFollowed: [PFUser]?
+    var detailPin: Pin?
     
     func setUser(){
         self.currentUser = PFUser.currentUser()
@@ -79,11 +83,32 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
             if let pinViewController = segue.destinationViewController as? PinViewController{
                 pinViewController.localPins = pins
                 pinViewController.friendPins = friendPins
+                pinViewController.friendPinDict = MapHelper.nameKeyDict(friendPins)
                 pinViewController.delegate = self
             }
             
         }
+        
+        else if segue.identifier == "addFriends" {
+            if let friendSearchViewController = segue.destinationViewController as? FriendSearchViewController{
+            }
+        }
+        
+        else if segue.identifier == "addFriends" {
+            if let protoMenuViewController = segue.destinationViewController as? ProtoMenuViewController{
+            }
+        }
+        
+        else if segue.identifier == "showDetails" {
+            if let detailViewController = segue.destinationViewController as? DetailViewController{
+                detailViewController.thisPin = detailPin
+            }
+        }
+        
     }
+    
+    
+    
     
     
     @IBAction func findMeButton(sender: UIButton) {
@@ -95,6 +120,7 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
     
     
     @IBAction func pinSetterUnwind(sender: UIStoryboardSegue){
+        refreshMap()
     }
     
     
@@ -102,6 +128,10 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
         let span = MKCoordinateSpanMake(0.01, 0.01)
         let region = MKCoordinateRegion(center: zoomToLocation!, span: span)
         mapView.setRegion(region, animated: true)
+    }
+    
+    @IBAction func unWindFromProtoMenu (segue: UIStoryboardSegue) {
+        refreshMap()
     }
     
     
@@ -130,55 +160,56 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
     
     func setupForFloatingButton(){
         let fabManager = KCFABManager.defaultInstance()
-        let fabRight = KCFloatingActionButton()
+        let fab = KCFloatingActionButton()
         let fabRightImage = UIImage(named: "settings-2")
-        fabRight.openAnimationType = .SlideUp
-    
-        fabRight.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fab.openAnimationType = .SlideUp
+        fab.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
         fabRightImage?.drawInRect(CGRect(x: 15, y: 15, width: 15, height: 15))
        
         
         
-        fabRight.buttonImage = fabRightImage //UIImage(named: "settings")
- 
-        fabRight.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
-       
-    
-        
-        fabRight.size = 30
-
-        fabRight.paddingY = 25
-        fabRight.addItem("Find Me", icon: UIImage(named: "weapon-crosshair")!, handler: { item in
+        fab.buttonImage = fabRightImage //UIImage(named: "settings")
+        fab.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fab.size = 30
+        fab.paddingY = 25
+        fab.addItem("Find Me", icon: UIImage(named: "weapon-crosshair")!, handler: { item in
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegion(center: self.currentPosition!.coordinate, span: span)
             self.mapView.setRegion(region, animated: true)
-            fabRight.close()
+            fab.close()
         })
         
-        fabRight.addItem("My Pins", icon: UIImage(named: "placeholder")!, handler: { item in
+        fab.addItem("My Pins", icon: UIImage(named: "placeholder")!, handler: { item in
             self.performSegueWithIdentifier("pinList", sender: self)
-            fabRight.close()
+            fab.close()
         })
         
         
-        fabRight.addItem("Friends", icon: UIImage(named: "symbol")!, handler: { item in
-            self.toggleSideMenuView()
-            fabRight.close()
+        fab.addItem("Friends", icon: UIImage(named: "symbol")!, handler: { item in
+            self.performSegueWithIdentifier("viewFriendPins", sender: self)
+            fab.close()
         })
+        //addFriends
         
         
-        fabRight.addItem("Log out", icon: UIImage(named: "man-and-opened-exit-door")!, handler: { item in
+        fab.addItem("Log out", icon: UIImage(named: "man-and-opened-exit-door")!, handler: { item in
             PFUser.logOut()
             self.dismissViewControllerAnimated(true, completion: nil)
-            fabRight.close()
+            fab.close()
         })
         
-        fabRight.addItem("Refresh", icon: UIImage(named: "refresh-button")!, handler: { item in
+        fab.addItem("Refresh", icon: UIImage(named: "refresh-button")!, handler: { item in
             self.refreshMap()
-            fabRight.close()
+            fab.close()
         })
         
-        self.view.addSubview(fabRight)
+        fab.addItem("Add friends", icon: UIImage(named: "add")!, handler: { item in
+            self.performSegueWithIdentifier("addFriends", sender: self)
+            fab.close()
+        })
+        
+        
+        self.view.addSubview(fab)
     }
     
     
@@ -235,6 +266,9 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
     func refreshMap (){
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
+        
+        MapHelper.populateFriendPins(self.mapView, friendPins: friendPins)
+        
         MapHelper.populatePins(self.mapView) { (pins) in
             self.pins = pins
             for p in pins {
@@ -243,8 +277,14 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
             self.clusters = MapHelper.prepareClustering(pins + self.friendPins)
             self.clusteringManager.setAnnotations(self.clusters)
             self.localPinDict = MapHelper.createDict(pins)
+            self.localFriendDict = MapHelper.createDict(self.friendPins)
 
         }
+    }
+    
+    func showDetails(detailPin: Pin){
+        performSegueWithIdentifier("showDetails", sender: self)
+        self.detailPin = detailPin
     }
     
     
@@ -257,13 +297,25 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.mapView.showsBuildings = true
         self.mapView.mapType = .Standard
+        
+        let mapCamera = MKMapCamera()
+        
+        mapCamera.pitch = 45
+        mapCamera.altitude = 500
+        mapCamera.heading = 45
+        
+        // Set MKmapView camera property
+        self.mapView.camera = mapCamera
+        
         self.mapView.delegate!.mapView!(self.mapView, regionDidChangeAnimated: true)
+        
         //SETUP LOCAL VARIABLES
         setUser()
         setupForFloatingButton()
         
-        (self.navigationController as? ENSideMenuNavigationController)?.sideMenu?.delegate = self
+        //(self.navigationController as? ENSideMenuNavigationController)?.sideMenu?.delegate = self
         
         
         
@@ -321,6 +373,14 @@ class MapViewController: UIViewController, ENSideMenuDelegate, MapRefreshDelegat
                     }
                 }
             }}
+    
+        //Update the current List of Friends 
+        
+        let friendQuery = PFQuery(className: "Follow")
+        friendQuery.whereKey("fromUser", equalTo: PFUser.currentUser()!)
+        friendQuery.findObjectsInBackgroundWithBlock {(result: [PFObject]?, error: NSError?) -> Void in
+            self.usersBeingFollowed = result as? [PFUser] ?? []
+        }
     }
 }
 
@@ -493,7 +553,6 @@ extension MapViewController : MKMapViewDelegate {
         
 
         pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin") as MKAnnotationView!
-        //pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         
         
         if pinView == nil {
@@ -505,14 +564,19 @@ extension MapViewController : MKMapViewDelegate {
         
         
         let searchKey = MapHelper.makeKey(annotation.coordinate)
-        if(localPinDict[searchKey] == nil){
-            pinView?.image = UIImage(named: "car")
-        }
-        else{
-             pinView?.image = UIImage(named: "first")
+        
+        if (localPinDict[searchKey] != nil){
+            pinView?.image = UIImage(named: localPinDict[searchKey]!.annotationId)
         }
         
-       //pinView?.image = UIImage(named: "car")
+        else if (localFriendDict[searchKey] != nil){
+            pinView?.image = UIImage(named: (localFriendDict[searchKey]?.annotationId)!)
+        }
+        
+        else{
+            
+            pinView?.image = UIImage(named: "defaultPin")
+        }
         
         
         let smallSquare = CGSize(width: 30, height: 30)
@@ -546,14 +610,13 @@ extension MapViewController : MKMapViewDelegate {
         
         queryPinAtGeoPoint(annotation) { currentPins in
             if(currentPins.count == 0){
-                self.pinView?.canShowCallout = true // Maybe here?
+                self.pinView?.canShowCallout = true // Check that I don't already have a pin here.
             }
             else{
                 self.pinView?.canShowCallout = false
             }
         }
-
-    
+        
         return pinView
     }
     
@@ -562,16 +625,14 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
         
-        print("didSelectAnnotationCalled")
+        print("selected")
         
         // let pinHolder = queryPinAtGeoPoint(view.annotation!)
         
         queryPinAtGeoPoint(view.annotation!) { pinHolder in
             
             if view.annotation is MKUserLocation || pinHolder.count == 0
-            {
-                // Don't proceed with custom callout
-                return
+            { return // Don't proceed with custom callout
             }
             
             if (view.subviews.count > 0){
@@ -590,7 +651,6 @@ extension MapViewController : MKMapViewDelegate {
             let views = NSBundle.mainBundle().loadNibNamed("CustomCalloutView", owner: nil, options: nil)
             let calloutView = views[0] as! CustomCalloutView
             
-            
             let userImageFile = currentPin?["imageFile"] as? PFFile
             userImageFile!.getDataInBackgroundWithBlock {
                 (imageData: NSData?, error: NSError?) -> Void in
@@ -601,18 +661,20 @@ extension MapViewController : MKMapViewDelegate {
                 }
             }
             
-            calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
-            calloutView.date.text = String(currentPin!.date)
-            calloutView.place.text = currentPin!.placeName
-            
             if(PFUser.currentUser() == currentPin?.user){
                 calloutView.owner = true
             }
-            else{ calloutView.owner = false }
             
+            else{
+                calloutView.owner = false
+            }
             
-            calloutView.location = currentPin?.geoPoint
+            calloutView.center = CGPointMake(view.bounds.size.width / 2, -calloutView.bounds.size.height*0.52)
+            calloutView.delegate = self
+            calloutView.thisPin = currentPin!
             calloutView.pinImage.image = currentPin?.image
+            calloutView.dateLabel.text = currentPin?.date
+
             
             
             let span = MKCoordinateSpanMake(0.01, 0.01)
@@ -626,12 +688,9 @@ extension MapViewController : MKMapViewDelegate {
     
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-        
-        
-        if view.isKindOfClass(CustomCalloutView)
-        {
-            for subview in view.subviews
-            {
+    
+        if view.isKindOfClass(CustomCalloutView){
+            for subview in view.subviews {
                 subview.removeFromSuperview()
             }
         }
@@ -656,7 +715,6 @@ extension MapViewController: ProtoMenuViewControllerDelegate {
     func makeFriendPins(friendPins: [Pin]) {
         self.friendPins.removeAll()
         self.friendPins = friendPins
-        print(friendPins.count)
     }
 }
 

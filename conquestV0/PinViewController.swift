@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 import MapKit
+import Spring
 
 protocol MapRefreshDelegate {
     func refreshMap()
@@ -17,7 +18,8 @@ protocol MapRefreshDelegate {
 
 
 class PinViewController: UIViewController {
-
+    
+    var friendPinDict: [String:[Pin]]?
     var localPins: [Pin] = []
     var friendPins: [Pin] = []
     var zoomToLocation: CLLocationCoordinate2D?
@@ -27,17 +29,21 @@ class PinViewController: UIViewController {
     var updatedPin: Pin?
     var owner:Bool?
     var delegate: MapRefreshDelegate? = nil
+    var sections: [String] = ["My Pins"]
  
-    
-
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        var friendArray:[String] = []
+        for (name, _) in self.friendPinDict! {
+            friendArray.append(name)
+        }
+        
+        let sortedFriends = friendArray.sort { $0 < $1}
+        self.sections = sections + sortedFriends
     }
     
     override func viewWillDisappear(animated : Bool) {
@@ -51,11 +57,8 @@ class PinViewController: UIViewController {
      override func  prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "detail"{
             if let detailViewController = segue.destinationViewController as? DetailViewController {
-                detailViewController.currentTitle = self.thisPin!.title
-                detailViewController.currentDate = String(self.thisPin!.date)
-                detailViewController.currentLocation = self.thisPin!.placeName
-                detailViewController.currentDescription = self.thisPin!.details
-                //detailViewController.currentImage = self.thisPin!.imageFile
+                detailViewController.thisPin = self.thisPin
+
             }
         }
         
@@ -78,25 +81,35 @@ class PinViewController: UIViewController {
 
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        
+        if indexPath.section == 0{
+            self.thisPin = self.localPins[indexPath.row]
+        }
+        else{
+            self.thisPin = self.friendPinDict![sections[indexPath.section]]![indexPath.row]
+        }
+        
+        
         self.thisPin = self.localPins[indexPath.row]
         
-        let map = UITableViewRowAction(style: .Normal, title: "Map") { action, index in
+        let map = UITableViewRowAction(style: .Normal, title: "           ") { action, index in
             let lat = self.thisPin!["geoLocation"].latitude
             let lon = self.thisPin!["geoLocation"].longitude
             let point = CLLocationCoordinate2D(latitude: lat!, longitude: lon!)
             
             self.zoomToLocation = point
             self.performSegueWithIdentifier("map", sender: self)
+            
         }
-        map.backgroundColor = UIColor.lightGrayColor()
+        map.backgroundColor = UIColor.brownColor()
         
-        let detail = UITableViewRowAction(style: .Normal, title: "details") { action, index in
+        let detail = UITableViewRowAction(style: .Normal, title: "           ") { action, index in
             self.performSegueWithIdentifier("detail", sender: self)
         }
         
         detail.backgroundColor = UIColor.orangeColor()
         
-        let edit = UITableViewRowAction(style: .Normal, title: "edit") { action, index in
+        let edit = UITableViewRowAction(style: .Normal, title: "           ") { action, index in
             self.thisIndexPath = indexPath
             self.thisPinIndex = indexPath.row
             self.performSegueWithIdentifier("edit", sender: self)
@@ -104,7 +117,7 @@ class PinViewController: UIViewController {
         edit.backgroundColor = UIColor.blueColor()
         
         
-        let delete = UITableViewRowAction(style: .Normal, title: "delete") { action, index in
+        let delete = UITableViewRowAction(style: .Normal, title: "           ") { action, index in
             self.owner = self.thisPin?.user == PFUser.currentUser()
             if(self.owner!){
                 let deleteQuery = Pin.query()
@@ -129,28 +142,58 @@ class PinViewController: UIViewController {
             }
         }
         
-        delete.backgroundColor = UIColor.purpleColor()
+        delete.backgroundColor = UIColor.redColor()
         
-        return [map, detail, edit, delete]
+        
+        if indexPath.section == 0{
+            return [map, detail, edit, delete]
         }
+        
+        else{
+             return [map, detail]
+        }
+        
+    }
     
+    
+     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+
+    
+        return sections.count
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.sections[section]
+    }
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return localPins.count
+        
+        if (section == 0) { return localPins.count }
+        else {              return (friendPinDict![sections[section]]?.count)! }
     }
     
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("pinCell", forIndexPath: indexPath) as! PinTableViewCell
-        let rowPin = localPins[indexPath.row]
         
-        cell.pinImage.image = rowPin.image
+        if(indexPath.section == 0) {
+            let rowPin = localPins[indexPath.row]
+            cell.pinImage.image = rowPin.image
+            cell.titleLabel.text = rowPin.title
+            cell.dateLabel.text = rowPin.date
+        }
         
-
-    
-        cell.titleLabel.text = rowPin.title
-        cell.dateLabel.text = String(rowPin.date)
+        else {
+            
+            let name = sections[indexPath.section]
+            let rowPin = friendPinDict![name]![indexPath.row]
+            cell.pinImage.image = rowPin.image
+            cell.titleLabel.text = rowPin.title
+            cell.dateLabel.text = rowPin.date
+        }
+        
         return cell 
     }
     
@@ -158,9 +201,7 @@ class PinViewController: UIViewController {
         tableView.reloadData()
     }
 
-    
-    
-    
+
     
     
     //MARK: Accessories for functionality ///
