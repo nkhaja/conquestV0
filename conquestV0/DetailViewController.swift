@@ -23,7 +23,7 @@ class DetailViewController: UIViewController {
         titleLabel.text = thisPin?.title
         dateLabel.text = thisPin?.date
         locationLabel.text = thisPin?.placeName
-        descriptionLabel.text = thisPin?.description
+        descriptionLabel.text = thisPin?.details
         pinImage.image = thisPin?.image
 
         // Do any additional setup after loading the view.
@@ -33,5 +33,15 @@ class DetailViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "seePicture" {
+            if let pictureFrameViewController = segue.destinationViewController as? PictureFrameViewController{
+                pictureFrameViewController.pictureHolder = thisPin?.image
+                
+            }
+        }
+    }
+    
 
 }

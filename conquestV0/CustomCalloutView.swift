@@ -26,8 +26,9 @@ class CustomCalloutView: MKAnnotationView {
     
     
 
-    @IBOutlet weak var pinImage: UIImageView!
+    @IBOutlet weak var pinImage: DesignableImageView!
     @IBOutlet weak var dateLabel: DesignableLabel!
+    @IBOutlet weak var ownerLabel: DesignableLabel!
     
 
     @IBAction func calloutButton(sender: AnyObject) {

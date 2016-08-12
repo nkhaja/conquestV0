@@ -19,6 +19,7 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
     var updatedPin: Pin?
     let imagePicker = UIImagePickerController()
     var imageHolder: UIImage?
+    var annotationId: String = "defaultPin"
     
     @IBOutlet weak var pinImage: UIImageView!
     
@@ -26,6 +27,7 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var dateText: DesignableLabel!
     @IBOutlet weak var locationText: UITextField!
     @IBOutlet weak var descriptionBox: DesignableTextView!
+    @IBOutlet weak var annotationImage: UIImageView!
     
 
     @IBAction func selectImageButton(sender: UIButton) {
@@ -105,27 +107,16 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         let imagedata = UIImageJPEGRepresentation(self.pinImage.image!, 0.8)
         self.thisPin!.imageFile = PFFile(data: imagedata!)
-        let p  = self.thisPin!
-        p["title"] = self.titleText.text
-        //p["date"] = self.dateText.text
-        p["placeName"] = self.locationText.text
-        p["description"] = self.descriptionBox.text
-        p["imageFile"] = self.thisPin!.imageFile
-       
-        p.saveInBackground()
+        //let p  = self.thisPin!
+        thisPin!["title"] = self.titleText.text
+        thisPin!["date"] = self.dateText.text
+        thisPin!["placeName"] = self.locationText.text
+        thisPin!["details"] = self.descriptionBox.text
+        thisPin!["imageFile"] = self.thisPin!.imageFile
+        thisPin!["annotationId"] = self.annotationId
+        thisPin!.saveInBackground()
 
         
-        let lat = self.thisPin!["geoLocation"].latitude
-        let lon = self.thisPin!["geoLocation"].longitude
-        let geo = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-        
-        updatedPin = Pin(place: geo)
-        updatedPin?.title = self.titleText.text
-        //updatedPin?.date = self.dateText.text
-        updatedPin?.placeName = self.locationText.text
-        updatedPin?.details = self.descriptionBox.text
-        updatedPin?.imageFile = thisPin!.imageFile
-        updatedPin?.image = pinImage.image
         
         performSegueWithIdentifier("edit", sender: self)
     }
@@ -134,24 +125,35 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "edit" {
             if let pinViewController = segue.destinationViewController as? PinViewController {
-                pinViewController.updatedPin = self.updatedPin
-                pinViewController.localPins[thisPinIndex] = self.updatedPin!
+
+                pinViewController.updatedPin = self.thisPin
+                pinViewController.localPins[thisPinIndex] = self.thisPin!
                 pinViewController.tableView.reloadData()
+                
+            }
+        }
+        
+        
+        else if segue.identifier == "selectAnnotationFromEditor" {
+            if let annotationCollectionViewController = segue.destinationViewController as? AnnotationCollectionViewController{
+                annotationCollectionViewController.sender = "editor"
             }
         }
     }
     
 
-    
-    
+    @IBAction func unWindFromAnnotationChange(sender: UIStoryboardSegue){
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.annotationImage.image = UIImage(named: self.thisPin!.annotationId)
+        self.annotationId = (thisPin?.annotationId)!
         titleText.text = thisPin?.title
-        dateText.text = String(thisPin?.date)
+        dateText.text = thisPin?.date!
         locationText.text = thisPin?.placeName
-        descriptionBox.text = thisPin?.description
+        descriptionBox.text = thisPin?.details
         self.pinImage.image = imageHolder
         imagePicker.delegate = self
     }
@@ -160,9 +162,6 @@ class EditPinViewController: UIViewController, UIImagePickerControllerDelegate, 
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-
 }
 
 

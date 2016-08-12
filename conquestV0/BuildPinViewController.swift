@@ -21,7 +21,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     let imagePicker = UIImagePickerController()
     var currentUser: PFUser?
     var delegate: BuildPinViewControllerDelegate?
-    var annotationId: String? = nil
+    var annotationId: String = "defaultPin"
     
 
     
@@ -30,6 +30,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var dateLabel: DesignableLabel!
     @IBOutlet weak var pinPhoto: UIImageView!
     @IBOutlet weak var descriptionBox: DesignableTextView!
+    @IBOutlet weak var iconImage: UIImageView!
 
     
 
@@ -112,8 +113,8 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
                 newPin.placeName = locationField.text
                 newPin.date = dateLabel.text
                 newPin.details = descriptionBox.text
-                if (self.annotationId != nil){
-                    newPin.annotationId = self.annotationId!}
+                newPin.ownerName = PFUser.currentUser()?.username
+                newPin.annotationId = self.annotationId
                 
                 let imagedata = UIImageJPEGRepresentation( pinPhoto.image!, 0.8)
                 newPin.imageFile = PFFile(data: imagedata!)
@@ -124,6 +125,11 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
             }
         }
         
+        else if segue.identifier == "selectAnnotationFromBuilder" {
+            if let annotationCollectionViewController = segue.destinationViewController as? AnnotationCollectionViewController{
+                annotationCollectionViewController.sender = "builder"
+            }
+        }
     }
     
     
@@ -161,7 +167,22 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func addPin(pin:Pin, controller: MapViewController){
     
-    
+        if pin.title == nil{
+            pin.title = ""
+        }
+        
+        if pin.date == nil{
+            pin.date = ""
+        }
+        
+        if pin.placeName == nil{
+            pin.placeName = ""
+        }
+        
+        if pin.details == nil{
+            pin.details = ""
+        }
+        
         let newPin = PFObject(className: "Pin")
         newPin["user"] = pin.user
         newPin["title"] = pin.title
@@ -170,10 +191,10 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
         newPin["imageFile"] = pin.imageFile
         newPin["details"] = pin.details
         newPin["date"] = pin.date
-        newPin["annotationId"] = self.annotationId
-        newPin["ownerName"] = PFUser.currentUser()?.username
+        newPin["annotationId"] = pin.annotationId
+        newPin["ownerName"] = pin.ownerName
 //        newPin.saveInBackground()
-        
+
         newPin.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if (success) {

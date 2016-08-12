@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            // 4
 //            // Otherwise set the LoginViewController to be the first
             let loginViewController = LogInViewController()
-            loginViewController.fields = [.UsernameAndPassword, .LogInButton, .SignUpButton, .PasswordForgotten, .Facebook]
+            loginViewController.fields = [.UsernameAndPassword, .LogInButton, .SignUpButton, .Facebook] //  .PasswordForgotten,
             loginViewController.delegate = parseLoginHelper
             loginViewController.signUpController = SignUpViewController() // MARK: Tried SignUp Here!
             loginViewController.signUpController?.delegate = parseLoginHelper

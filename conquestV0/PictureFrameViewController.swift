@@ -9,9 +9,13 @@
 import UIKit
 
 class PictureFrameViewController: UIViewController {
+    
+    var pictureHolder: UIImage?
 
+    @IBOutlet weak var picture: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        picture.image = pictureHolder
 
         // Do any additional setup after loading the view.
     }

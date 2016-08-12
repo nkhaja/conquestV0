@@ -40,38 +40,48 @@ class LogInViewController : PFLogInViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // set our custom background image
-        backgroundImage = UIImageView(image: UIImage(named: "citySky"))
+        backgroundImage = UIImageView(image: UIImage(named: "login"))
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         logInView!.insertSubview(backgroundImage, atIndex: 0)
         
         // remove the parse Logo
         let logo = UILabel()
-        logo.text = "Vay.K"
+        logo.text = ""
         logo.textColor = UIColor.whiteColor()
-        logo.font = UIFont(name: "Pacifico", size: 70)
+        logo.font = UIFont(name: "Avenir Next", size: 70)
         logo.shadowColor = UIColor.lightGrayColor()
-        logo.shadowOffset = CGSizeMake(2, 2)
+        //logo.shadowOffset = CGSizeMake(2, 2)
         logInView?.logo = logo
         
         // set forgotten password button to white
-        logInView?.passwordForgottenButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        logInView?.passwordForgottenButton?.layer.backgroundColor = MapHelper.hexStringToUIColor("b5b5b5").colorWithAlphaComponent(0.6).CGColor
+        //logInView?.passwordForgottenButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        //logInView?.passwordForgottenButton?.layer.backgroundColor = MapHelper.hexStringToUIColor("36B0FF").colorWithAlphaComponent(0.6).CGColor
+        
+        logInView?.facebookButton?.backgroundColor = MapHelper.hexStringToUIColor("36B0FF").colorWithAlphaComponent(0.6)
+
+        
 
         
         // make the background of the login button pop more
         logInView?.logInButton?.setBackgroundImage(nil, forState: .Normal)
-        logInView?.logInButton?.backgroundColor = UIColor(red: 52/255, green: 191/255, blue: 73/255, alpha: 1)
+        logInView?.logInButton?.backgroundColor = UIColor.blackColor() //MapHelper.hexStringToUIColor("36B0FF")
+        //logInView?.logInButton?.backgroundColor = UIColor(red: 52/255, green: 191/255, blue: 73/255, alpha: 1)
+        
+        
         
         // make the buttons classier
         //customizeButton(logInView?.facebookButton!)
         //customizeButton(logInView?.twitterButton!)
-        customizeButton(logInView?.signUpButton!)
+        //customizeButton(logInView?.signUpButton!)
+    
         
         // create an array of all the views we want to animate in when we launch
         // the screen
-        viewsToAnimate = [self.logInView?.usernameField, self.logInView?.passwordField, self.logInView?.logInButton, self.logInView?.passwordForgottenButton, self.logInView?.signUpButton, self.logInView?.logo]
+        viewsToAnimate = [self.logInView?.usernameField, self.logInView?.passwordField, self.logInView?.logInButton,self.logInView?.facebookButton, self.logInView?.signUpButton, self.logInView?.logo]
+        // self.logInView?.passwordForgottenButton,  REMOVED
+        
         // missing the Twitter button above //  self.logInView?.twitterButton,
-        // Missing FaceBook button above // self.logInView?.facebookButton,
+        // Missing FaceBook button above // ,
         
     }
     
@@ -81,7 +91,7 @@ class LogInViewController : PFLogInViewController {
         button.layer.cornerRadius = 5
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.whiteColor().CGColor
-        button.layer.backgroundColor = MapHelper.hexStringToUIColor("b5b5b5").colorWithAlphaComponent(0.6).CGColor
+        button.layer.backgroundColor = MapHelper.hexStringToUIColor("b5b5b5").colorWithAlphaComponent(0.8).CGColor
     }
     
     override func viewDidLayoutSubviews() {

@@ -8,9 +8,11 @@
 
 import UIKit
 import Spring
+import MGSwipeTableCell
 
 
-class PinTableViewCell: UITableViewCell{
+
+class PinTableViewCell: MGSwipeTableCell{
 
     
     @IBOutlet weak var pinImage: DesignableImageView!
@@ -18,16 +20,22 @@ class PinTableViewCell: UITableViewCell{
     @IBOutlet weak var locationLabel: DesignableLabel!
     @IBOutlet weak var dateLabel: DesignableLabel!
     
+    var cellPin: Pin?
+    var indexPath: NSIndexPath?
 
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
+    }
+    
+    override func prepareForReuse() {
+    
+
     }
 
 }

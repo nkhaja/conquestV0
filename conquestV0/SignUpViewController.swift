@@ -21,26 +21,27 @@ class SignUpViewController : PFSignUpViewController {
         super.viewDidLoad()
         
         // set our custom background image
-        backgroundImage = UIImageView(image: UIImage(named: "citySky"))
+        backgroundImage = UIImageView(image: UIImage(named: "login"))
         backgroundImage.contentMode = UIViewContentMode.ScaleAspectFill
         signUpView!.insertSubview(backgroundImage, atIndex: 0)
         
         // remove the parse Logo
         let logo = UILabel()
-        logo.text = "MemoryMap"
+        logo.text = ""
         logo.textColor = UIColor.whiteColor()
-        logo.font = UIFont(name: "Pacifico", size: 70)
+        logo.font = UIFont(name: "Avenir Next", size: 70)
         logo.shadowColor = UIColor.lightGrayColor()
-        logo.shadowOffset = CGSizeMake(2, 2)
+        //logo.shadowOffset = CGSizeMake(2, 2)
         signUpView?.logo = logo
         
         // make the background of the sign up button pop more
         signUpView?.signUpButton!.setBackgroundImage(nil, forState: .Normal)
-        signUpView?.signUpButton!.backgroundColor = UIColor(red: 52/255, green: 191/255, blue: 73/255, alpha: 1)
+        signUpView?.signUpButton!.backgroundColor = UIColor.blackColor()  //MapHelper.hexStringToUIColor("36B0FF")
         
         // change dismiss button to say 'Already signed up?'
         signUpView?.dismissButton!.setTitle("Already signed up?", forState: .Normal)
         signUpView?.dismissButton!.setImage(nil, forState: .Normal)
+        signUpView?.dismissButton!.backgroundColor = MapHelper.hexStringToUIColor("36B0FF")
         
         // modify the present tranisition to be a flip instead
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal

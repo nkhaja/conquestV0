@@ -6,16 +6,18 @@ target 'conquestV0' do
   use_frameworks!
 
   # Pods for conquestV0
+    pod 'FacebookCore'
+    pod 'FacebookLogin'
+    pod 'FacebookShare'
     pod 'Bond', '4.0.0'
     pod 'ConvenienceKit'
     pod 'Parse'
     pod 'ParseFacebookUtilsV4'
     pod 'ParseUI'
     pod 'FBAnnotationClusteringSwift'
-    pod 'KCFloatingActionButton'
+    pod 'KCFloatingActionButton’
     pod 'Spring', :git => 'https://github.com/MengTo/Spring.git', :branch => 'swift2'
-
-
+    pod ’MGSwipeTableCell'
 
 end
 

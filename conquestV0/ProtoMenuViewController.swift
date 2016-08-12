@@ -14,9 +14,11 @@ protocol ProtoMenuViewControllerDelegate {
     func makeFriendPins(friendPins: [Pin])
 }
 
-class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
+  //, ToggleSwitchDelegate
+
+class ProtoMenuViewController: UIViewController, NotifyTableDelegate{
     
-    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     @IBOutlet weak var tableView: UITableView!
     weak var mapViewController: MapViewController!
@@ -55,6 +57,11 @@ class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
     
     }
     
+    func notifyTable() {
+        queries.removeAll()
+        self.tableView.reloadData()
+    }
+    
     func saveState(state: Bool, indexPath: NSIndexPath) {
         states[String(indexPath)] = state
     }
@@ -73,8 +80,8 @@ class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
         super.viewDidLoad()
 
         self.tableView.backgroundColor = UIColor.clearColor()
-        setupTableView()
-        
+        //setupTableView()
+
         ParseHelper.getInfoForSideMenu(PFUser.currentUser()!) {
             (results: [PFObject]?, error: NSError?) -> Void in
             if let error = error {
@@ -109,18 +116,26 @@ class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("sideCell", forIndexPath:  indexPath) as! ProtoTableViewCell
-        cell.delegate = self
-        cell.indexPath = indexPath
-        cell.userLabel.text = followedUsers![indexPath.row]["username"] as? String
-        cell.backgroundColor = UIColor.clearColor()
+        let followee = followedUsers![indexPath.row]["username"] as? String
+        let toggleState: Bool? = defaults.boolForKey(followee!)
         
-        if(self.states[String(indexPath)] == nil){
-            self.states[String(indexPath)] = cell.toggleSwitch.on
+        if let toggleState = toggleState {
+            cell.toggleSwitch.on = toggleState
         }
         
-        cell.state = self.states[String(indexPath)]!
-        cell.reloadInputViews()
+            
+        else{
+            cell.toggleSwitch.on = false
+        }
         
+        if (cell.toggleSwitch.on){
+            queryForUserAtRow(indexPath)
+        }
+        
+        
+        cell.userLabel.text = followee
+        cell.backgroundColor = UIColor.clearColor()
+        cell.delegate = self
         return cell
     }
     
@@ -143,25 +158,31 @@ class ProtoMenuViewController: UIViewController, ToggleSwitchDelegate {
                     print("I need to get here")
                     callBack(result)
                 }
+                
+                
             }
         }
         
-        else{
+        else {
             callBack([])
         }
+        
+
         
        queries.removeAll()  
     }
     
     @IBAction func setFriendPinsButton(sender: AnyObject) {
 }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "exitFromProtoToMap"{
             getPinsOfSelectedUsers() { (pins) in
                 self.pinsOfFollowedUsers = pins
-                self.performSegueWithIdentifier("exitFromProtoToMap", sender: self)
+                //self.performSegueWithIdentifier("exitFromProtoToMap", sender: self)
                 if let mapViewController = segue.destinationViewController as? MapViewController{
                     mapViewController.friendPins = self.pinsOfFollowedUsers!
+                    mapViewController.refreshMap()
                 }
             }
         }

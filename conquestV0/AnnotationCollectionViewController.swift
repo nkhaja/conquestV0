@@ -8,13 +8,12 @@
 
 import UIKit
 
-import UIKit
-
 class AnnotationCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     let reuseIdentifier = "collectionCell" // also enter this string as the cell identifier in the storyboard
-    var items = ["bluePushPin", "yellowPushPin", "redGooglePin", "clothesPin"]
+    var items = ["bluePushPin", "yellowPushPin", "redGooglePin", "clothesPin", "baguette", "chili", "candy", "doughnut", "egg", "fish", "fruit", "fries", "gingerBreadMan", "glass", "ice-cream", "noodles", "knife", "pint", "glass", "pizza", "sandwich", "redWine", "shwarma", "steak", "sushi", "turkey", "basketball", "bee", "bicycle", "books", "boxing", "burger", "candy", "coins", "cricket","cup", "deer", "exercise", "flask", "football", "goggles", "golf", "graduate", "hcokey", "hummingbird", "lion", "martini", "money", "nemo", "olympics", "owl", "shopping-basket", "shopping-cart", "snorkel", "soccer", "spider-web", "fishing", "rollerSkates", "baseball", "football-helmet", "billiards", "medal", "volleyBall", "karate", "strategy", "swan", "video-camera", "tennies-ball"]
     var annotationId: String?
+    var sender: String?
     
     
     // MARK: - UICollectionViewDataSource protocol
@@ -39,21 +38,33 @@ class AnnotationCollectionViewController: UIViewController, UICollectionViewData
     
     // MARK: - UICollectionViewDelegate protocol
     
-    
-    
-    
-    
+
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         // handle tap events
         self.annotationId = items[indexPath.item]
-        performSegueWithIdentifier("annotationSelected", sender: self)
+        
+        if (sender == "builder"){
+            performSegueWithIdentifier("annotationSelected", sender: self)
+        }
+        else if (sender == "editor"){
+            performSegueWithIdentifier("newAnnotationSelected", sender: self)
+        }
+  
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "annotationSelected"{
             if let buildPinViewController = segue.destinationViewController as? BuildPinViewController {
-                buildPinViewController.annotationId = self.annotationId
+                buildPinViewController.annotationId = self.annotationId!
+                buildPinViewController.iconImage.image = UIImage(named: annotationId!)
                 
+            }
+        }
+        
+        else if segue.identifier == "newAnnotationSelected"{
+            if let editPinViewController = segue.destinationViewController as? EditPinViewController{
+                editPinViewController.annotationImage.image = UIImage(named: self.annotationId!)
+                editPinViewController.annotationId  = self.annotationId!
             }
         }
     }

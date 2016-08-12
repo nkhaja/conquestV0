@@ -63,6 +63,7 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
     var zoomToLocation: CLLocationCoordinate2D?
     var usersBeingFollowed: [PFUser]?
     var detailPin: Pin?
+    var allowClustering: Bool = false
     
     func setUser(){
         self.currentUser = PFUser.currentUser()
@@ -104,10 +105,19 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
                 detailViewController.thisPin = detailPin
             }
         }
-        
     }
     
     
+    @IBAction func refreshButton(sender: AnyObject){
+        refreshMap()
+    }
+    
+    @IBAction func zoomOutButton(sender: AnyObject) {
+        var region = mapView.region
+        region.span.latitudeDelta = min(region.span.latitudeDelta * 2, 180)
+        region.span.longitudeDelta = min(region.span.longitudeDelta * 2, 180)
+        self.mapView.setRegion(region, animated: true)
+    }
     
     
     
@@ -125,7 +135,7 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
     
     
     @IBAction func unWindFromPinTableView (segue: UIStoryboardSegue) {
-        let span = MKCoordinateSpanMake(0.01, 0.01)
+        let span = MKCoordinateSpanMake(0.005, 0.005)
         let region = MKCoordinateRegion(center: zoomToLocation!, span: span)
         mapView.setRegion(region, animated: true)
     }
@@ -160,56 +170,118 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
     
     func setupForFloatingButton(){
         let fabManager = KCFABManager.defaultInstance()
-        let fab = KCFloatingActionButton()
-        let fabRightImage = UIImage(named: "settings-2")
-        fab.openAnimationType = .SlideUp
-        fab.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
-        fabRightImage?.drawInRect(CGRect(x: 15, y: 15, width: 15, height: 15))
-       
+        
+        let fabRight = KCFloatingActionButton()
+        let fabRightImage = UIImage(named: "connect-2")
+        fabRight.openAnimationType = .SlideUp
+        fabRight.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fabRightImage!.drawInRect(CGRect(x: 25, y: 25, width: 25, height: 25))
+        fabRight.buttonImage = fabRightImage
+        
+     
+        fabRight.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fabRight.size = 40
+        fabRight.itemSize = 40
+        fabRight.paddingX = 20
+        fabRight.friendlyTap = false
+ 
+        ///////////
+        
+        let fabLeft = KCFloatingActionButton()
+        let fabLeftImage = UIImage(named: "settings-3")
+        fabLeft.openAnimationType = .SlideUp
+        fabLeft.buttonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fabLeftImage?.drawInRect(CGRect(x: 25, y: 25, width: 25, height: 25))
         
         
-        fab.buttonImage = fabRightImage //UIImage(named: "settings")
-        fab.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
-        fab.size = 30
-        fab.paddingY = 25
-        fab.addItem("Find Me", icon: UIImage(named: "weapon-crosshair")!, handler: { item in
+        fabLeft.buttonImage = fabLeftImage //UIImage(named: "settings")
+        fabLeft.itemButtonColor = MapHelper.hexStringToUIColor("#36B0FF")
+        fabLeft.size = 40
+        fabLeft.itemSize = 40
+        fabLeft.paddingX = UIScreen.mainScreen().bounds.width - 60
+        fabLeft.friendlyTap = false
+    
+        
+        ////////////////// RIGHT FAB ITEMS //////////////////////////
+        
+        fabRight.addItem("My Pins", icon: UIImage(named: "placeholder")!, handler: { item in
+            self.performSegueWithIdentifier("pinList", sender: self)
+            fabRight.close()
+        })
+        
+        
+        fabRight.addItem("Followees", icon: UIImage(named: "symbol")!, handler: { item in
+            self.performSegueWithIdentifier("viewFriendPins", sender: self)
+            fabRight.close()
+        })
+        
+        
+        fabRight.addItem("Add friends", icon: UIImage(named: "add-white")!, handler: { item in
+            self.performSegueWithIdentifier("addFriends", sender: self)
+            fabRight.close()
+        })
+        
+        fabRight.addItem("Log out", icon: UIImage(named: "man-and-opened-exit-door")!, handler: { item in
+            PFUser.logOut()
+            self.dismissViewControllerAnimated(true, completion: nil)
+            fabRight.close()
+        })
+        
+
+    
+        ///////////////// LEFT FAB ITEMS /////////////////////////////
+        
+        fabLeft.addItem("Find Me", icon: UIImage(named: "weapon-crosshair")!, handler: { item in
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegion(center: self.currentPosition!.coordinate, span: span)
             self.mapView.setRegion(region, animated: true)
-            fab.close()
-        })
-        
-        fab.addItem("My Pins", icon: UIImage(named: "placeholder")!, handler: { item in
-            self.performSegueWithIdentifier("pinList", sender: self)
-            fab.close()
+            fabLeft.close()
         })
         
         
-        fab.addItem("Friends", icon: UIImage(named: "symbol")!, handler: { item in
-            self.performSegueWithIdentifier("viewFriendPins", sender: self)
-            fab.close()
-        })
-        //addFriends
-        
-        
-        fab.addItem("Log out", icon: UIImage(named: "man-and-opened-exit-door")!, handler: { item in
-            PFUser.logOut()
-            self.dismissViewControllerAnimated(true, completion: nil)
-            fab.close()
+        fabLeft.addItem(" Cluster", icon: UIImage(named: "arrow-cluster")!, handler: { item in
+            self.allowClustering = !self.allowClustering
+            fabLeft.close()
         })
         
-        fab.addItem("Refresh", icon: UIImage(named: "refresh-button")!, handler: { item in
+        
+       fabLeft.addItem("  Maps", icon: UIImage(named: "seeMap-white")!, handler: { item in
+            
+            var mapChangeAlert = UIAlertController(title:"Change Map", message: "Select Map Type", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            mapChangeAlert.addAction(UIAlertAction(title: "Standard", style: .Default, handler: { (action: UIAlertAction!) in
+                self.mapView.mapType = .Standard
+            }))
+            
+            mapChangeAlert.addAction(UIAlertAction(title: "Hybrid", style: .Default, handler: { (action: UIAlertAction!) in
+                self.mapView.mapType = .Hybrid
+            }))
+            
+            mapChangeAlert.addAction(UIAlertAction(title: "Satellite Flyover", style: .Default, handler: { (action: UIAlertAction!) in
+                self.mapView.mapType = .SatelliteFlyover
+            }))
+            
+            mapChangeAlert.addAction(UIAlertAction(title: "Hybrid Flyover", style: .Default, handler: { (action: UIAlertAction!) in
+                self.mapView.mapType = .HybridFlyover
+            }))
+            
+            self.presentViewController(mapChangeAlert, animated: true, completion: nil)
+            
+            fabLeft.close()
+        })
+        
+        fabLeft.addItem("Refresh", icon: UIImage(named: "refresh-button")!, handler: { item in
             self.refreshMap()
-            fab.close()
+            fabLeft.close()
         })
         
-        fab.addItem("Add friends", icon: UIImage(named: "add")!, handler: { item in
-            self.performSegueWithIdentifier("addFriends", sender: self)
-            fab.close()
-        })
+        for i in 0..<fabLeft.items.count{
+            var title = fabLeft.items[i].titleLabel
+            title.frame.origin.x = title.frame.size.width - 10
+        }
         
-        
-        self.view.addSubview(fab)
+         self.view.addSubview(fabRight)
+         self.view.addSubview(fabLeft)
     }
     
     
@@ -283,8 +355,9 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
     }
     
     func showDetails(detailPin: Pin){
-        performSegueWithIdentifier("showDetails", sender: self)
         self.detailPin = detailPin
+        performSegueWithIdentifier("showDetails", sender: self)
+        
     }
     
     
@@ -674,6 +747,23 @@ extension MapViewController : MKMapViewDelegate {
             calloutView.thisPin = currentPin!
             calloutView.pinImage.image = currentPin?.image
             calloutView.dateLabel.text = currentPin?.date
+            calloutView.ownerLabel.text = currentPin?.ownerName
+            
+            calloutView.pinImage.animation = "slideUp"
+            calloutView.pinImage.curve = "linear"
+            calloutView.pinImage.duration = 1.5
+            calloutView.pinImage.animate()
+            
+            calloutView.dateLabel.animation = "slideUp"
+            calloutView.dateLabel.curve = "linear"
+            calloutView.dateLabel.duration = 1.5
+            calloutView.dateLabel.animate()
+            
+            calloutView.ownerLabel.animation = "slideUp"
+            calloutView.ownerLabel.curve = "linear"
+            calloutView.ownerLabel.duration = 1.5
+            calloutView.ownerLabel.animate()
+            
 
             
             
@@ -699,12 +789,14 @@ extension MapViewController : MKMapViewDelegate {
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool){
         NSOperationQueue().addOperationWithBlock({
         
+            if (self.allowClustering) {
             let mapBoundsWidth = Double(self.mapView.bounds.size.width)
             let mapRectWidth:Double = self.mapView.visibleMapRect.size.width
             let scale:Double = mapBoundsWidth / mapRectWidth
-            print(mapView.annotations.count)
             let annotationArray = self.clusteringManager.clusteredAnnotationsWithinMapRect(self.mapView.visibleMapRect, withZoomScale:scale)
             self.clusteringManager.displayAnnotations(annotationArray, onMapView: self.mapView)
+            
+            }
 
         
         })
