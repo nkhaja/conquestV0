@@ -71,6 +71,11 @@ class MapViewController: UIViewController, MapRefreshDelegate, CustomCalloutDele
     
     
     
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "buildPin" {
             if let buildPinViewController = segue.destinationViewController as?
@@ -652,9 +657,12 @@ extension MapViewController : MKMapViewDelegate {
         }
         
         
-        let smallSquare = CGSize(width: 30, height: 30)
+        let smallSquare = CGSize(width: pinView?.frame.width ?? 0, height: pinView?.frame.height ?? 0)
         let button = UIButton(frame: CGRect(origin: CGPointZero, size: smallSquare))
-        button.setBackgroundImage(UIImage(named: "car"), forState: .Normal)
+        button.setImage(UIImage(named: "defaultPin"), forState: .Normal)
+        button.contentMode = .ScaleAspectFit
+        
+        //button.setBackgroundImage(UIImage(named: "defaultPin"), forState: .Normal)
         
         //button.addTarget(self, action: "getDirections", forControlEvents: .TouchUpInside)
         

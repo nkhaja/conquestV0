@@ -11,7 +11,7 @@ import UIKit
 class AnnotationCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     let reuseIdentifier = "collectionCell" // also enter this string as the cell identifier in the storyboard
-    var items = ["bluePushPin", "yellowPushPin", "redGooglePin", "clothesPin", "baguette", "chili", "candy", "doughnut", "egg", "fish", "fruit", "fries", "gingerBreadMan", "glass", "ice-cream", "noodles", "knife", "pint", "glass", "pizza", "sandwich", "redWine", "shwarma", "steak", "sushi", "turkey", "basketball", "bee", "bicycle", "books", "boxing", "burger", "candy", "coins", "cricket","cup", "deer", "exercise", "flask", "football", "goggles", "golf", "graduate", "hcokey", "hummingbird", "lion", "martini", "money", "nemo", "olympics", "owl", "shopping-basket", "shopping-cart", "snorkel", "soccer", "spider-web", "fishing", "rollerSkates", "baseball", "football-helmet", "billiards", "medal", "volleyBall", "karate", "strategy", "swan", "video-camera", "tennies-ball"]
+    var items = ["bluePushPin", "yellowPushPin", "redGooglePin", "clothesPin", "baguette", "chili", "candy", "doughnut", "egg", "fish", "fruit", "fries", "gingerBreadMan", "glass", "ice-cream", "noodles", "knife", "pint", "glass", "pizza", "sandwich", "shwarma", "steak", "sushi", "turkey", "basketball", "bee", "bicycle", "books", "boxing", "burger", "candy", "coins", "cricket","cup", "deer", "exercise", "flask", "football", "goggles", "golf", "graduate", "hockey", "hummingbird", "lion", "martini", "money", "nemo", "olympics", "owl", "shopping-basket", "shopping-cart", "snorkel", "soccer", "spider-web", "fishing", "rollerSkates", "baseball", "football-helmet", "billiards", "medal", "volleyBall", "karate", "strategy", "swan", "video-camera", "tennis-ball"]
     var annotationId: String?
     var sender: String?
     
@@ -56,7 +56,8 @@ class AnnotationCollectionViewController: UIViewController, UICollectionViewData
         if segue.identifier == "annotationSelected"{
             if let buildPinViewController = segue.destinationViewController as? BuildPinViewController {
                 buildPinViewController.annotationId = self.annotationId!
-                buildPinViewController.iconImage.image = UIImage(named: annotationId!)
+                buildPinViewController.annotationButton.setBackgroundImage(UIImage(named: annotationId!), forState: UIControlState.Normal)
+                //buildPinViewController.iconImage.image = UIImage(named: annotationId!)
                 
             }
         }

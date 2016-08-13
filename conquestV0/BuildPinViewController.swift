@@ -15,7 +15,7 @@ protocol BuildPinViewControllerDelegate {
     func updatePins()
 }
 
-class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate  {
     
     var selectedPin:MKPlacemark? = nil
     let imagePicker = UIImagePickerController()
@@ -30,11 +30,47 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var dateLabel: DesignableLabel!
     @IBOutlet weak var pinPhoto: UIImageView!
     @IBOutlet weak var descriptionBox: DesignableTextView!
-    @IBOutlet weak var iconImage: UIImageView!
+    @IBOutlet weak var annotationButton: UIButton!
+    
+    //@IBOutlet weak var iconImage: UIImageView!
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
+    func textViewShouldEndEditing(textView: UITextView) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
+    func didTapView(){
+        self.view.endEditing(true)
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"  // Recognizes enter key in keyboard
+        {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+        self.descriptionBox.resignFirstResponder()
+    }
     
 
     @IBAction func setPhotoButton(sender: UIButton) {
+        
+        dismissKeyboard()
         
         imagePicker.allowsEditing = false
         
@@ -99,6 +135,7 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
 
     
     @IBAction func submitPin(sender: DesignableButton) {
+        //performSegueWithIdentifier("pinIsSet", sender: self)
     }
 
     
@@ -143,8 +180,18 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        annotationButton.setBackgroundImage(UIImage(named: "pin"), forState: UIControlState.Normal)
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+        
         imagePicker.delegate = self
         locationField.text = (selectedPin?.name)! + ", " + (selectedPin?.locality)!
+        
+        self.titleField.delegate = self
+        self.locationField.delegate = self
+        self.descriptionBox.delegate = self
     }
     
     // MARK: - UIImagePickerControllerDelegate Methods
@@ -152,7 +199,6 @@ class BuildPinViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            pinPhoto.contentMode = .ScaleAspectFit
             pinPhoto.image = pickedImage
         }
         
